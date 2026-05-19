@@ -42,6 +42,8 @@ import {
   faFileAlt,
   faStar,
   faChevronDown,
+  faEnvelope,
+  faPaperPlane,
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -89,5 +91,7 @@ export const fontAwesomeIcons = [
   faFileAlt,
   faStar,
   faChevronDown,
+  faEnvelope,
+  faPaperPlane,
   // jhipster-needle-add-icon-import
 ];

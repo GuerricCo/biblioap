@@ -1,111 +1,123 @@
-<aside class="sidebar">
-  <nav class="sidebar-nav">
-    <!-- CATALOGUE -->
-    @if (account() !== null) {
-      <div class="sidebar-section">
-        <span class="sidebar-section-label">Catalogue</span>
-        <ul class="sidebar-menu">
-          <li>
-            <a class="sidebar-link" routerLink="/book" routerLinkActive="sidebar-link--active" [routerLinkActiveOptions]="{ exact: false }">
-              <span class="sidebar-icon">
-                <fa-icon icon="book-open" />
-              </span>
-              <span>Livres</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="sidebar-link"
-              routerLink="/author"
-              routerLinkActive="sidebar-link--active"
-              [routerLinkActiveOptions]="{ exact: false }"
-            >
-              <span class="sidebar-icon">
-                <fa-icon icon="users" />
-              </span>
-              <span>Auteurs</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="sidebar-link"
-              routerLink="/category"
-              routerLinkActive="sidebar-link--active"
-              [routerLinkActiveOptions]="{ exact: false }"
-            >
-              <span class="sidebar-icon">
-                <fa-icon icon="th-large" />
-              </span>
-              <span>Catégories</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+@if (!isAuthPage()) {
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <!-- CATALOGUE -->
+      @if (account() !== null) {
+        <div class="sidebar-section">
+          <span class="sidebar-section-label">Catalogue</span>
+          <ul class="sidebar-menu">
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/book"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="book-open" />
+                </span>
+                <span>Livres</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/author"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="users" />
+                </span>
+                <span>Auteurs</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/category"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="th-large" />
+                </span>
+                <span>Catégories</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-      <div class="sidebar-divider"></div>
+        <div class="sidebar-divider"></div>
 
-      <!-- GESTION -->
-      <div class="sidebar-section">
-        <span class="sidebar-section-label">Gestion</span>
-        <ul class="sidebar-menu">
-          <li>
-            <a
-              class="sidebar-link"
-              routerLink="/member"
-              routerLinkActive="sidebar-link--active"
-              [routerLinkActiveOptions]="{ exact: false }"
-            >
-              <span class="sidebar-icon">
-                <fa-icon icon="user" />
-              </span>
-              <span>Membres</span>
-            </a>
-          </li>
-          <li>
-            <a class="sidebar-link" routerLink="/loan" routerLinkActive="sidebar-link--active" [routerLinkActiveOptions]="{ exact: false }">
-              <span class="sidebar-icon">
-                <fa-icon icon="file-alt" />
-              </span>
-              <span>Prêts</span>
-            </a>
-          </li>
-          <li>
-            <a
-              class="sidebar-link"
-              routerLink="/reservation"
-              routerLinkActive="sidebar-link--active"
-              [routerLinkActiveOptions]="{ exact: false }"
-            >
-              <span class="sidebar-icon">
-                <fa-icon icon="list" />
-              </span>
-              <span>Réservations</span>
-            </a>
-          </li>
-        </ul>
-      </div>
+        <!-- GESTION -->
+        <div class="sidebar-section">
+          <span class="sidebar-section-label">Gestion</span>
+          <ul class="sidebar-menu">
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/member"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="user" />
+                </span>
+                <span>Membres</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/loan"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="file-alt" />
+                </span>
+                <span>Prêts</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/reservation"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="list" />
+                </span>
+                <span>Réservations</span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-      <div class="sidebar-divider"></div>
+        <div class="sidebar-divider"></div>
 
-      <!-- AVIS -->
-      <div class="sidebar-section">
-        <span class="sidebar-section-label">Avis</span>
-        <ul class="sidebar-menu">
-          <li>
-            <a
-              class="sidebar-link"
-              routerLink="/review"
-              routerLinkActive="sidebar-link--active"
-              [routerLinkActiveOptions]="{ exact: false }"
-            >
-              <span class="sidebar-icon">
-                <fa-icon icon="star" />
-              </span>
-              <span>Avis &amp; notes</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-    }
-  </nav>
-</aside>
+        <!-- AVIS -->
+        <div class="sidebar-section">
+          <span class="sidebar-section-label">Avis</span>
+          <ul class="sidebar-menu">
+            <li>
+              <a
+                class="sidebar-link"
+                routerLink="/review"
+                routerLinkActive="sidebar-link--active"
+                [routerLinkActiveOptions]="{ exact: false }"
+              >
+                <span class="sidebar-icon">
+                  <fa-icon icon="star" />
+                </span>
+                <span>Avis &amp; notes</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      }
+    </nav>
+  </aside>
+}

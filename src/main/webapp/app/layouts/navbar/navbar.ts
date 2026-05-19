@@ -61,9 +61,8 @@ export default class Navbar implements OnInit {
 
   readonly isLoginPage = computed(() => {
     const url = this.currentUrl() ?? '';
-    return url === '/' || url.startsWith('/account/register');
+    return url === '/' || url === '/login' || url.startsWith('/account/register') || url.startsWith('/account/reset/request');
   });
-
   constructor() {
     const { VERSION } = environment;
     if (VERSION) {
