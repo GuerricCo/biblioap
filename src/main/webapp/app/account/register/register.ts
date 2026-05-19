@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, inject, signal, viewChild } from 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared/jhipster/error.constants';
@@ -13,8 +14,9 @@ import { RegisterService } from './register.service';
 
 @Component({
   selector: 'jhi-register',
-  imports: [TranslateDirective, TranslateModule, RouterLink, ReactiveFormsModule, PasswordStrengthBar],
+  imports: [RouterLink, ReactiveFormsModule, PasswordStrengthBar, FontAwesomeModule],
   templateUrl: './register.html',
+  styleUrl: './register.scss',
 })
 export default class Register implements AfterViewInit {
   login = viewChild.required<ElementRef>('login');

@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (library(); as libraryRef) {
+      <div>
+        <h2 data-cy="libraryDetailsHeading"><span jhiTranslate="bibliApp.library.detail.title">Library</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ libraryRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.library.name">Name</span></dt>
+          <dd>
+            <span>{{ libraryRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.library.address">Address</span></dt>
+          <dd>
+            <span>{{ libraryRef.address }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.library.city">City</span></dt>
+          <dd>
+            <span>{{ libraryRef.city }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.library.phone">Phone</span></dt>
+          <dd>
+            <span>{{ libraryRef.phone }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.library.email">Email</span></dt>
+          <dd>
+            <span>{{ libraryRef.email }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/library', libraryRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

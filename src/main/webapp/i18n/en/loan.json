@@ -1,0 +1,30 @@
+{
+  "bibliApp": {
+    "loan": {
+      "home": {
+        "title": "Loans",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Loan",
+        "createOrEditLabel": "Create or edit a Loan",
+        "notFound": "No Loans found"
+      },
+      "created": "A new Loan is created with identifier {{ param }}",
+      "updated": "A Loan is updated with identifier {{ param }}",
+      "deleted": "A Loan is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Loan {{ id }}?"
+      },
+      "detail": {
+        "title": "Loan"
+      },
+      "id": "ID",
+      "borrowDate": "Borrow Date",
+      "dueDate": "Due Date",
+      "returnDate": "Return Date",
+      "status": "Status",
+      "library": "Library",
+      "book": "Book",
+      "member": "Member"
+    }
+  }
+}

@@ -7,11 +7,14 @@ import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 
 import { PasswordResetInitService } from './password-reset-init.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'jhi-password-reset-init',
-  imports: [TranslateDirective, TranslateModule, AlertError, ReactiveFormsModule],
+  imports: [AlertError, ReactiveFormsModule, FontAwesomeModule, RouterLink],
   templateUrl: './password-reset-init.html',
+  styleUrl: './password-reset-init.scss',
 })
 export default class PasswordResetInit implements AfterViewInit {
   email = viewChild.required<ElementRef>('email');

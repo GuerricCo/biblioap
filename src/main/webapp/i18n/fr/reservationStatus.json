@@ -1,0 +1,10 @@
+{
+  "bibliApp": {
+    "ReservationStatus": {
+      "null": "",
+      "WAITING": "WAITING",
+      "READY": "READY",
+      "CANCELLED": "CANCELLED"
+    }
+  }
+}

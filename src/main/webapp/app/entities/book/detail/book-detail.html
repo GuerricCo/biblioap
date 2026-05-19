@@ -1,0 +1,91 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (book(); as bookRef) {
+      <div>
+        <h2 data-cy="bookDetailsHeading"><span jhiTranslate="bibliApp.book.detail.title">Book</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ bookRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.title">Title</span></dt>
+          <dd>
+            <span>{{ bookRef.title }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.isbn">Isbn</span></dt>
+          <dd>
+            <span>{{ bookRef.isbn }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.publicationDate">Publication Date</span></dt>
+          <dd>
+            <span>{{ bookRef.publicationDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.description">Description</span></dt>
+          <dd>
+            <span>{{ bookRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.language">Language</span></dt>
+          <dd>
+            <span>{{ bookRef.language }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.pages">Pages</span></dt>
+          <dd>
+            <span>{{ bookRef.pages }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.available">Available</span></dt>
+          <dd>
+            <span>{{ bookRef.available }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.totalCopies">Total Copies</span></dt>
+          <dd>
+            <span>{{ bookRef.totalCopies }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.availableCopies">Available Copies</span></dt>
+          <dd>
+            <span>{{ bookRef.availableCopies }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.library">Library</span></dt>
+          <dd>
+            @if (book()!.library) {
+              <div>
+                <a [routerLink]="['/library', book()!.library?.id, 'view']">{{ bookRef.library?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.category">Category</span></dt>
+          <dd>
+            @if (book()!.category) {
+              <div>
+                <a [routerLink]="['/category', book()!.category?.id, 'view']">{{ bookRef.category?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bibliApp.book.authors">Authors</span></dt>
+          <dd>
+            @for (authors of bookRef.authorses; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/author', authors.id, 'view']">{{ authors?.firstName }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/book', bookRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

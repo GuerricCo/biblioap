@@ -1,0 +1,35 @@
+{
+  "bibliApp": {
+    "book": {
+      "home": {
+        "title": "Books",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Book",
+        "createOrEditLabel": "Créer ou éditer un Book",
+        "notFound": "Aucun Book trouvé"
+      },
+      "created": "Un nouveau Book a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Book avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Book avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Book {{ id }} ?"
+      },
+      "detail": {
+        "title": "Book"
+      },
+      "id": "ID",
+      "title": "Title",
+      "isbn": "Isbn",
+      "publicationDate": "Publication Date",
+      "description": "Description",
+      "language": "Language",
+      "pages": "Pages",
+      "available": "Available",
+      "totalCopies": "Total Copies",
+      "availableCopies": "Available Copies",
+      "library": "Library",
+      "category": "Category",
+      "authors": "Authors"
+    }
+  }
+}

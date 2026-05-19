@@ -1,0 +1,72 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (loan(); as loanRef) {
+      <div>
+        <h2 data-cy="loanDetailsHeading"><span jhiTranslate="bibliApp.loan.detail.title">Loan</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ loanRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.borrowDate">Borrow Date</span></dt>
+          <dd>
+            <span>{{ loanRef.borrowDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.dueDate">Due Date</span></dt>
+          <dd>
+            <span>{{ loanRef.dueDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.returnDate">Return Date</span></dt>
+          <dd>
+            <span>{{ loanRef.returnDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.status">Status</span></dt>
+          <dd>
+            <span [jhiTranslate]="'bibliApp.LoanStatus.' + (loanRef.status ?? 'null')">{{
+              { null: '', BORROWED: 'BORROWED', RETURNED: 'RETURNED', LATE: 'LATE' }[loanRef.status ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.library">Library</span></dt>
+          <dd>
+            @if (loan()!.library) {
+              <div>
+                <a [routerLink]="['/library', loan()!.library?.id, 'view']">{{ loanRef.library?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.book">Book</span></dt>
+          <dd>
+            @if (loan()!.book) {
+              <div>
+                <a [routerLink]="['/book', loan()!.book?.id, 'view']">{{ loanRef.book?.title }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bibliApp.loan.member">Member</span></dt>
+          <dd>
+            @if (loan()!.member) {
+              <div>
+                <a [routerLink]="['/member', loan()!.member?.id, 'view']">{{ loanRef.member?.email }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/loan', loanRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

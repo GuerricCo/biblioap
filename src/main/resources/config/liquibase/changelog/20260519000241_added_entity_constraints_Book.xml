@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Book.
+    -->
+    <changeSet id="20260519000241-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="library_id"
+                                 baseTableName="book"
+                                 constraintName="fk_book__library_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="library"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="book"
+                                 constraintName="fk_book__category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="book_id"
+                                 baseTableName="rel_book__authors"
+                                 constraintName="fk_rel_book__authors__book_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="book"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="authors_id"
+                                 baseTableName="rel_book__authors"
+                                 constraintName="fk_rel_book__authors__authors_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="author"
+                                 />
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,124 @@
+entity Library {
+  name String required
+  address String
+  city String
+  phone String
+  email String
+}
+
+entity Book {
+  title String required
+  isbn String unique required
+  publicationDate LocalDate
+  description String
+  language String
+  pages Integer
+  available Boolean required
+  totalCopies Integer required min(0)
+  availableCopies Integer required min(0)
+}
+
+entity Author {
+  firstName String required
+  lastName String required
+  birthDate LocalDate
+  nationality String
+  biography String
+}
+
+entity Category {
+  name String required unique
+  description String
+}
+
+entity Member {
+  firstName String required
+  lastName String required
+  email String required unique
+  phone String
+  membershipDate LocalDate
+  active Boolean required
+}
+
+entity Loan {
+  borrowDate LocalDate required
+  dueDate LocalDate required
+  returnDate LocalDate
+  status LoanStatus required
+}
+
+enum LoanStatus {
+  BORROWED,
+  RETURNED,
+  LATE
+}
+
+enum ReservationStatus {
+  WAITING,
+  READY,
+  CANCELLED
+}
+
+entity Review {
+  rating Integer required min(1) max(5)
+  comment String
+  createdAt Instant required
+}
+
+entity Reservation {
+  reservationDate LocalDate required
+  status ReservationStatus required
+
+}
+
+/**
+ * RELATIONS
+ */
+
+relationship ManyToMany {
+  Book{authors(firstName)} to Author{books(title)}
+}
+
+relationship ManyToOne {
+
+  Book{library(name)} to Library
+  Loan{library(name)} to Library
+  Reservation{library(name)} to Library
+  Member{library(name)} to Library
+  Review{library(name)} to Library
+
+  Book{category(name)} to Category
+
+  Loan{book(title)} to Book
+  Loan{member(email)} to Member
+
+  Review{book(title)} to Book
+  Review{member(email)} to Member
+
+  Reservation{book(title)} to Book
+  Reservation{member(email)} to Member
+}
+
+/**
+ * PAGINATION
+ */
+
+paginate Book, Author, Member, Loan, Review, Reservation with pagination
+
+/**
+ * DTO
+ */
+
+dto * with mapstruct
+
+/**
+ * SERVICE
+ */
+
+service all with serviceClass
+
+/**
+ * FILTERING
+ */
+
+filter *

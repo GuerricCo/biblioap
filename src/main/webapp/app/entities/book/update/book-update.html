@@ -1,0 +1,227 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-book-heading" data-cy="BookCreateUpdateHeading" jhiTranslate="bibliApp.book.home.createOrEditLabel">
+        Créer ou éditer un Book
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let titleRef = editForm.get('title')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_title" jhiTranslate="bibliApp.book.title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          @if (titleRef.invalid && (titleRef.dirty || titleRef.touched)) {
+            <div>
+              @if (editForm.get('title')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let isbnRef = editForm.get('isbn')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_isbn" jhiTranslate="bibliApp.book.isbn">Isbn</label>
+          <input type="text" class="form-control" name="isbn" id="field_isbn" data-cy="isbn" formControlName="isbn" />
+          @if (isbnRef.invalid && (isbnRef.dirty || isbnRef.touched)) {
+            <div>
+              @if (editForm.get('isbn')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_publicationDate" jhiTranslate="bibliApp.book.publicationDate">Publication Date</label>
+          <div class="input-group">
+            <input
+              id="field_publicationDate"
+              data-cy="publicationDate"
+              type="text"
+              class="form-control"
+              name="publicationDate"
+              ngbDatepicker
+              #publicationDateDp="ngbDatepicker"
+              formControlName="publicationDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="publicationDateDp.toggle()"><fa-icon icon="calendar-alt" /></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_description" jhiTranslate="bibliApp.book.description">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_language" jhiTranslate="bibliApp.book.language">Language</label>
+          <input type="text" class="form-control" name="language" id="field_language" data-cy="language" formControlName="language" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_pages" jhiTranslate="bibliApp.book.pages">Pages</label>
+          <input type="number" class="form-control" name="pages" id="field_pages" data-cy="pages" formControlName="pages" />
+        </div>
+
+        @let availableRef = editForm.get('available')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_available" jhiTranslate="bibliApp.book.available">Available</label>
+          <input type="checkbox" class="form-check" name="available" id="field_available" data-cy="available" formControlName="available" />
+          @if (availableRef.invalid && (availableRef.dirty || availableRef.touched)) {
+            <div>
+              @if (editForm.get('available')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let totalCopiesRef = editForm.get('totalCopies')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_totalCopies" jhiTranslate="bibliApp.book.totalCopies">Total Copies</label>
+          <input
+            type="number"
+            class="form-control"
+            name="totalCopies"
+            id="field_totalCopies"
+            data-cy="totalCopies"
+            formControlName="totalCopies"
+          />
+          @if (totalCopiesRef.invalid && (totalCopiesRef.dirty || totalCopiesRef.touched)) {
+            <div>
+              @if (editForm.get('totalCopies')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+              @if (editForm.get('totalCopies')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Ce champ doit être supérieur à 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('totalCopies')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Ce champ doit être un nombre.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let availableCopiesRef = editForm.get('availableCopies')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_availableCopies" jhiTranslate="bibliApp.book.availableCopies">Available Copies</label>
+          <input
+            type="number"
+            class="form-control"
+            name="availableCopies"
+            id="field_availableCopies"
+            data-cy="availableCopies"
+            formControlName="availableCopies"
+          />
+          @if (availableCopiesRef.invalid && (availableCopiesRef.dirty || availableCopiesRef.touched)) {
+            <div>
+              @if (editForm.get('availableCopies')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+              @if (editForm.get('availableCopies')?.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Ce champ doit être supérieur à 0.</small
+                >
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('availableCopies')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >Ce champ doit être un nombre.</small
+              >
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_library" jhiTranslate="bibliApp.book.library">Library</label>
+          <select
+            class="form-control"
+            id="field_library"
+            data-cy="library"
+            name="library"
+            formControlName="library"
+            [compareWith]="compareLibrary"
+          >
+            <option [ngValue]="null"></option>
+            @for (libraryOption of librariesSharedCollection(); track $index) {
+              <option [ngValue]="libraryOption">{{ libraryOption.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_category" jhiTranslate="bibliApp.book.category">Category</label>
+          <select
+            class="form-control"
+            id="field_category"
+            data-cy="category"
+            name="category"
+            formControlName="category"
+            [compareWith]="compareCategory"
+          >
+            <option [ngValue]="null"></option>
+            @for (categoryOption of categoriesSharedCollection(); track $index) {
+              <option [ngValue]="categoryOption">{{ categoryOption.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_authorses" jhiTranslate="bibliApp.book.authors">Authors</label>
+          <select
+            class="form-control"
+            id="field_authorses"
+            data-cy="authors"
+            multiple
+            name="authorses"
+            formControlName="authorses"
+            [compareWith]="compareAuthor"
+          >
+            @for (authorOption of authorsSharedCollection(); track $index) {
+              <option [ngValue]="authorOption">{{ authorOption.firstName }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Annuler</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Sauvegarder</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

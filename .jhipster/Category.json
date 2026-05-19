@@ -1,0 +1,23 @@
+{
+  "annotations": {
+    "changelogDate": "20260519000243"
+  },
+  "applications": ["*"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Category",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

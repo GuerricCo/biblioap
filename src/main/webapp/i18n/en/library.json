@@ -1,0 +1,28 @@
+{
+  "bibliApp": {
+    "library": {
+      "home": {
+        "title": "Libraries",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Library",
+        "createOrEditLabel": "Create or edit a Library",
+        "notFound": "No Libraries found"
+      },
+      "created": "A new Library is created with identifier {{ param }}",
+      "updated": "A Library is updated with identifier {{ param }}",
+      "deleted": "A Library is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Library {{ id }}?"
+      },
+      "detail": {
+        "title": "Library"
+      },
+      "id": "ID",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "phone": "Phone",
+      "email": "Email"
+    }
+  }
+}

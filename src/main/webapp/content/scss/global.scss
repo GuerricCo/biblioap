@@ -234,3 +234,43 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
   }
 }
 /* jhipster-needle-scss-add-main JHipster will add new css style */
+/* ==========================================================================
+   App Layout — add to src/main/webapp/content/scss/global.scss
+   or to your main layout component scss
+   ========================================================================== */
+
+/* Push the page content below the fixed header and beside the sidebar */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+jhi-main > .container-fluid:not(:has(jhi-login)):not(:has(jhi-register)) {
+  margin-top: 64px;
+  margin-left: 240px;
+  padding: 24px;
+  background: #f7f8fa;
+  min-height: calc(100vh - 64px);
+}
+
+jhi-main > .container-fluid:has(jhi-login),
+jhi-main > .container-fluid:has(jhi-register) {
+  margin: 0 !important;
+  padding: 0 !important;
+
+  .jh-card {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+}
+/* Responsive: collapse sidebar on small screens */
+@media (max-width: 768px) {
+  jhi-main > .container-fluid {
+    margin-left: 0;
+  }
+
+  jhi-sidebar {
+    display: none;
+  }
+}

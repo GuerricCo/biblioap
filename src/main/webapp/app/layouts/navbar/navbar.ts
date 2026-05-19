@@ -1,8 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map, startWith } from 'rxjs/operators';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap/collapse';
 import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap/dropdown';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from 'environments/environment';
@@ -26,7 +27,6 @@ import ActiveMenuDirective from './active-menu.directive';
     RouterLink,
     RouterLinkActive,
     FontAwesomeModule,
-    NgbCollapse,
     NgbDropdown,
     NgbDropdownMenu,
     NgbDropdownToggle,
@@ -50,6 +50,19 @@ export default class Navbar implements OnInit {
   private readonly stateStorageService = inject(StateStorageService);
   private readonly profileService = inject(ProfileService);
   private readonly router = inject(Router);
+
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map((e: any) => e.urlAfterRedirects),
+      startWith(this.router.url),
+    ),
+  );
+
+  readonly isLoginPage = computed(() => {
+    const url = this.currentUrl() ?? '';
+    return url === '/' || url.startsWith('/account/register');
+  });
 
   constructor() {
     const { VERSION } = environment;

@@ -44,6 +44,16 @@ public class CacheConfiguration {
             createCache(cm, com.bibli.domain.User.class.getName());
             createCache(cm, com.bibli.domain.Authority.class.getName());
             createCache(cm, com.bibli.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.bibli.domain.Library.class.getName());
+            createCache(cm, com.bibli.domain.Book.class.getName());
+            createCache(cm, com.bibli.domain.Book.class.getName() + ".authorses");
+            createCache(cm, com.bibli.domain.Author.class.getName());
+            createCache(cm, com.bibli.domain.Author.class.getName() + ".bookses");
+            createCache(cm, com.bibli.domain.Category.class.getName());
+            createCache(cm, com.bibli.domain.Member.class.getName());
+            createCache(cm, com.bibli.domain.Loan.class.getName());
+            createCache(cm, com.bibli.domain.Review.class.getName());
+            createCache(cm, com.bibli.domain.Reservation.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

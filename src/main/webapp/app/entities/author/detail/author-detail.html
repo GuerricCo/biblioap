@@ -1,0 +1,59 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (author(); as authorRef) {
+      <div>
+        <h2 data-cy="authorDetailsHeading"><span jhiTranslate="bibliApp.author.detail.title">Author</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ authorRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.author.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ authorRef.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.author.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ authorRef.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.author.birthDate">Birth Date</span></dt>
+          <dd>
+            <span>{{ authorRef.birthDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.author.nationality">Nationality</span></dt>
+          <dd>
+            <span>{{ authorRef.nationality }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.author.biography">Biography</span></dt>
+          <dd>
+            <span>{{ authorRef.biography }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.author.books">Books</span></dt>
+          <dd>
+            @for (books of authorRef.bookses; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/book', books.id, 'view']">{{ books?.title }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/author', authorRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

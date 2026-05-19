@@ -1,0 +1,29 @@
+{
+  "bibliApp": {
+    "author": {
+      "home": {
+        "title": "Authors",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Author",
+        "createOrEditLabel": "Créer ou éditer un Author",
+        "notFound": "Aucun Author trouvé"
+      },
+      "created": "Un nouveau Author a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Author avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Author avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Author {{ id }} ?"
+      },
+      "detail": {
+        "title": "Author"
+      },
+      "id": "ID",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "birthDate": "Birth Date",
+      "nationality": "Nationality",
+      "biography": "Biography",
+      "books": "Books"
+    }
+  }
+}

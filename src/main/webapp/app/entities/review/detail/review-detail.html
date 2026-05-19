@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (review(); as reviewRef) {
+      <div>
+        <h2 data-cy="reviewDetailsHeading"><span jhiTranslate="bibliApp.review.detail.title">Review</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ reviewRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.review.rating">Rating</span></dt>
+          <dd>
+            <span>{{ reviewRef.rating }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.review.comment">Comment</span></dt>
+          <dd>
+            <span>{{ reviewRef.comment }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.review.createdAt">Created At</span></dt>
+          <dd>
+            <span>{{ reviewRef.createdAt | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.review.library">Library</span></dt>
+          <dd>
+            @if (review()!.library) {
+              <div>
+                <a [routerLink]="['/library', review()!.library?.id, 'view']">{{ reviewRef.library?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bibliApp.review.book">Book</span></dt>
+          <dd>
+            @if (review()!.book) {
+              <div>
+                <a [routerLink]="['/book', review()!.book?.id, 'view']">{{ reviewRef.book?.title }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bibliApp.review.member">Member</span></dt>
+          <dd>
+            @if (review()!.member) {
+              <div>
+                <a [routerLink]="['/member', review()!.member?.id, 'view']">{{ reviewRef.member?.email }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/review', reviewRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

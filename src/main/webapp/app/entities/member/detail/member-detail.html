@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (member(); as memberRef) {
+      <div>
+        <h2 data-cy="memberDetailsHeading"><span jhiTranslate="bibliApp.member.detail.title">Member</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ memberRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ memberRef.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ memberRef.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.email">Email</span></dt>
+          <dd>
+            <span>{{ memberRef.email }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.phone">Phone</span></dt>
+          <dd>
+            <span>{{ memberRef.phone }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.membershipDate">Membership Date</span></dt>
+          <dd>
+            <span>{{ memberRef.membershipDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.active">Active</span></dt>
+          <dd>
+            <span>{{ memberRef.active }}</span>
+          </dd>
+          <dt><span jhiTranslate="bibliApp.member.library">Library</span></dt>
+          <dd>
+            @if (member()!.library) {
+              <div>
+                <a [routerLink]="['/library', member()!.library?.id, 'view']">{{ memberRef.library?.name }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/member', memberRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

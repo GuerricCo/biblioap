@@ -1,0 +1,29 @@
+{
+  "bibliApp": {
+    "review": {
+      "home": {
+        "title": "Reviews",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Review",
+        "createOrEditLabel": "Créer ou éditer un Review",
+        "notFound": "Aucun Review trouvé"
+      },
+      "created": "Un nouveau Review a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Review avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Review avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Review {{ id }} ?"
+      },
+      "detail": {
+        "title": "Review"
+      },
+      "id": "ID",
+      "rating": "Rating",
+      "comment": "Comment",
+      "createdAt": "Created At",
+      "library": "Library",
+      "book": "Book",
+      "member": "Member"
+    }
+  }
+}

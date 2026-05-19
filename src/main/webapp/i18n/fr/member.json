@@ -1,0 +1,30 @@
+{
+  "bibliApp": {
+    "member": {
+      "home": {
+        "title": "Members",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Member",
+        "createOrEditLabel": "Créer ou éditer un Member",
+        "notFound": "Aucun Member trouvé"
+      },
+      "created": "Un nouveau Member a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Member avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Member avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Member {{ id }} ?"
+      },
+      "detail": {
+        "title": "Member"
+      },
+      "id": "ID",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "membershipDate": "Membership Date",
+      "active": "Active",
+      "library": "Library"
+    }
+  }
+}

@@ -4,10 +4,12 @@
   <router-outlet name="navbar" />
 </div>
 
+@if (!isLoginPage()) {
+  <jhi-sidebar />
+}
+
 <div class="container-fluid">
   <div class="card jh-card">
     <router-outlet />
   </div>
-
-  <jhi-footer />
 </div>

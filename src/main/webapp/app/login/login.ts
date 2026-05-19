@@ -7,11 +7,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { TranslateDirective } from 'app/shared/language';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'jhi-login',
-  imports: [TranslateDirective, TranslateModule, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FontAwesomeModule],
   templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
 export default class Login implements OnInit, AfterViewInit {
   username = viewChild.required<ElementRef>('username');
@@ -47,7 +49,7 @@ export default class Login implements OnInit, AfterViewInit {
         this.authenticationError.set(false);
         if (!this.router.currentNavigation()) {
           // There were no routing during login (eg from navigationToStoredUrl)
-          this.router.navigate(['']);
+          this.router.navigate(['/admin']);
         }
       },
       error: () => this.authenticationError.set(true),

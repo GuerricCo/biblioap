@@ -1,0 +1,31 @@
+id;first_name;last_name;email;phone;membership_date;active
+1;Françoise;Caron;Primerose.Schmitt@hotmail.fr;0483219423;2026-05-18;true
+2;Ariste;Marty;Gonthier.Gautier@yahoo.fr;0138769602;2026-05-18;false
+3;Antonine;David;Nehemie_Louis60@hotmail.fr;0249559595;2026-05-18;false
+4;Patrice;Le roux;Arnould_Meyer@gmail.com;0279075858;2026-05-18;false
+5;Bernard;Perrot;Melchior_Bourgeois86@yahoo.fr;0434071015;2026-05-18;false
+6;Jeanne;Gautier;Blaise.Moreau@gmail.com;0560204243;2026-05-18;false
+7;Abondance;Denis;Emmelie6@yahoo.fr;+33 173607586;2026-05-18;true
+8;Adrien;Nguyen;Marie.Rolland@gmail.com;+33 478548139;2026-05-18;false
+9;Paul;Richard;Melanie42@gmail.com;+33 593753270;2026-05-18;false
+10;Rodrigue;Guillaume;Sandrine_Dupont@hotmail.fr;0137289177;2026-05-18;true
+11;France;Roux;Ascension_Garnier49@hotmail.fr;+33 164689421;2026-05-18;true
+12;Paule;Hubert;Gaelle.Lambert16@yahoo.fr;+33 314288329;2026-05-18;false
+13;Adélaïde;Sanchez;Laure_Vidal@gmail.com;0637827226;2026-05-18;false
+14;Fantine;Fontaine;Denis.Henry@hotmail.fr;0775873499;2026-05-18;false
+15;Gabin;Roche;Adrienne_Dupuy85@gmail.com;+33 677835800;2026-05-18;true
+16;Jules;Marie;Vigile_Chevalier1@hotmail.fr;+33 468793377;2026-05-18;true
+17;Oriane;Gaillard;Ferdinand.Martinez67@hotmail.fr;0358374490;2026-05-18;false
+18;Baptiste;Da silva;Angelina.Laine@yahoo.fr;0354165880;2026-05-18;true
+19;Valentine;Barbier;Xenophon.Moulin@gmail.com;+33 648717569;2026-05-18;true
+20;Charlemagne;Duval;Aquiline_Mercier@hotmail.fr;+33 138042028;2026-05-18;false
+21;Hervé;Legrand;Bon2@hotmail.fr;0382796249;2026-05-18;false
+22;Fanny;Fleury;Guerin.Lopez@yahoo.fr;+33 240970641;2026-05-18;false
+23;Lambert;Laine;Mathilde_Nguyen12@hotmail.fr;+33 681765180;2026-05-18;false
+24;Ange;Vincent;Avoye88@gmail.com;0148178116;2026-05-18;true
+25;Blanche;Moreau;Amedee.Roche@hotmail.fr;+33 193952666;2026-05-18;true
+26;Iseult;Sanchez;Arcade.Leroy63@yahoo.fr;0555654253;2026-05-18;false
+27;Léna;Bourgeois;Chrysole.Guillot@hotmail.fr;+33 448916636;2026-05-18;true
+28;Magali;Remy;Oriane.Olivier57@yahoo.fr;0172367019;2026-05-18;true
+29;Titien;Henry;Aurore.Gauthier14@hotmail.fr;0722683061;2026-05-18;false
+30;Hervé;Le roux;Venceslas_Morin@gmail.com;+33 584313253;2026-05-18;true

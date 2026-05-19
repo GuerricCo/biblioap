@@ -1,0 +1,10 @@
+{
+  "bibliApp": {
+    "LoanStatus": {
+      "null": "",
+      "BORROWED": "BORROWED",
+      "RETURNED": "RETURNED",
+      "LATE": "LATE"
+    }
+  }
+}
