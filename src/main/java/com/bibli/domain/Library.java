@@ -50,10 +50,6 @@ public class Library implements Serializable {
 
     @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private Set<Author> authors = new HashSet<>();
-
-    @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private Set<Member> members = new HashSet<>();
 
     @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
