@@ -2,27 +2,27 @@
   "bibliApp": {
     "library": {
       "home": {
-        "title": "Libraries",
+        "title": "Bibliothèques",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Library",
-        "createOrEditLabel": "Créer ou éditer un Library",
-        "notFound": "Aucun Library trouvé"
+        "createLabel": "Créer une nouvelle bibliothèque",
+        "createOrEditLabel": "Créer ou éditer une bibliothèque",
+        "notFound": "Aucune bibliothèque trouvée"
       },
-      "created": "Un nouveau Library a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Library avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Library avec l'identifiant {{ param }} a été supprimé",
+      "created": "Une nouvelle bibliothèque a été créée avec l'identifiant {{ param }}",
+      "updated": "La bibliothèque avec l'identifiant {{ param }} a été mise à jour",
+      "deleted": "La bibliothèque avec l'identifiant {{ param }} a été supprimée",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Library {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer la bibliothèque {{ id }} ?"
       },
       "detail": {
-        "title": "Library"
+        "title": "Bibliothèque"
       },
       "id": "ID",
-      "name": "Name",
-      "address": "Address",
-      "city": "City",
-      "phone": "Phone",
-      "email": "Email"
+      "name": "Nom",
+      "address": "Adresse",
+      "city": "Ville",
+      "phone": "Téléphone",
+      "email": "Mail"
     }
   }
 }
