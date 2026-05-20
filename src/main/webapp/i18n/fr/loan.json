@@ -2,29 +2,29 @@
   "bibliApp": {
     "loan": {
       "home": {
-        "title": "Loans",
+        "title": "Prêts",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Loan",
-        "createOrEditLabel": "Créer ou éditer un Loan",
-        "notFound": "Aucun Loan trouvé"
+        "createLabel": "Créer un nouveau Prêt",
+        "createOrEditLabel": "Créer ou éditer un Prêt",
+        "notFound": "Aucun Prêt trouvé"
       },
-      "created": "Un nouveau Loan a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Loan avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Loan avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouveau Prêt a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Prêt avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Prêt avec l'identifiant {{ param }} a été supprimé",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Loan {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer le Prêt {{ id }} ?"
       },
       "detail": {
-        "title": "Loan"
+        "title": "Prêt"
       },
       "id": "ID",
-      "borrowDate": "Borrow Date",
-      "dueDate": "Due Date",
-      "returnDate": "Return Date",
+      "borrowDate": "Date d’emprunt",
+      "dueDate": "Date d’échéance",
+      "returnDate": "Date de retour",
       "status": "Status",
-      "library": "Library",
-      "book": "Book",
-      "member": "Member"
+      "library": "Bibliothèque",
+      "book": "Livre",
+      "member": "Membre"
     }
   }
 }

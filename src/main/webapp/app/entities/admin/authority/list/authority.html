@@ -1,6 +1,6 @@
 <div>
   <h2 id="page-heading" data-cy="AuthorityHeading">
-    <span jhiTranslate="bibliApp.adminAuthority.home.title">Authorities</span>
+    <span jhiTranslate="bibliApp.adminAuthority.home.title">Auteurs</span>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
@@ -15,7 +15,7 @@
         [routerLink]="['/authority/new']"
       >
         <fa-icon icon="plus" />
-        <span jhiTranslate="bibliApp.adminAuthority.home.createLabel">Créer un nouveau Authority</span>
+        <span jhiTranslate="bibliApp.adminAuthority.home.createLabel">Créer un nouvel auteur</span>
       </button>
     </div>
   </h2>
@@ -26,7 +26,7 @@
 
   @if (authorities().length === 0) {
     <div class="alert alert-warning" id="no-result">
-      <span jhiTranslate="bibliApp.adminAuthority.home.notFound">Aucun Authority trouvé</span>
+      <span jhiTranslate="bibliApp.adminAuthority.home.notFound">Aucun Auteur trouvé</span>
     </div>
   } @else {
     <div class="table-responsive table-entities" id="entities">
@@ -35,7 +35,7 @@
           <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
             <th scope="col" jhiSortBy="name">
               <div class="d-flex">
-                <span jhiTranslate="bibliApp.adminAuthority.name">Name</span>
+                <span jhiTranslate="bibliApp.adminAuthority.name">Nom</span>
 
                 <fa-icon class="p-1" icon="sort" />
               </div>

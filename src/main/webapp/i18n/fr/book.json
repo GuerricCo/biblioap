@@ -2,34 +2,34 @@
   "bibliApp": {
     "book": {
       "home": {
-        "title": "Books",
+        "title": "Livres",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Book",
-        "createOrEditLabel": "Créer ou éditer un Book",
-        "notFound": "Aucun Book trouvé"
+        "createLabel": "Créer un nouveau Livre",
+        "createOrEditLabel": "Créer ou éditer un Livre",
+        "notFound": "Aucun Livre trouvé"
       },
-      "created": "Un nouveau Book a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Book avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Book avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouveau livre a été créé avec l'identifiant {{ param }}",
+      "updated": "Le livre avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le livre avec l'identifiant {{ param }} a été supprimé",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Book {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer le Livre {{ id }} ?"
       },
       "detail": {
-        "title": "Book"
+        "title": "Livre"
       },
       "id": "ID",
-      "title": "Title",
+      "title": "Titre",
       "isbn": "Isbn",
-      "publicationDate": "Publication Date",
+      "publicationDate": "Date de Publication",
       "description": "Description",
-      "language": "Language",
+      "language": "Langue",
       "pages": "Pages",
-      "available": "Available",
-      "totalCopies": "Total Copies",
-      "availableCopies": "Available Copies",
-      "library": "Library",
-      "category": "Category",
-      "authors": "Authors"
+      "available": "Disponible",
+      "totalCopies": "Quantité",
+      "availableCopies": "Quantité disponible",
+      "library": "Bibliothèque",
+      "category": "Catégorie",
+      "authors": "Auteurs"
     }
   }
 }

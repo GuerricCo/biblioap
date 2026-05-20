@@ -2,29 +2,29 @@
   "bibliApp": {
     "member": {
       "home": {
-        "title": "Members",
+        "title": "Membres",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Member",
-        "createOrEditLabel": "Créer ou éditer un Member",
-        "notFound": "Aucun Member trouvé"
+        "createLabel": "Créer un nouveau Membre",
+        "createOrEditLabel": "Créer ou éditer un Membre",
+        "notFound": "Aucun Membre trouvé"
       },
-      "created": "Un nouveau Member a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Member avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Member avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouveau Membre a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Membre avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Membre avec l'identifiant {{ param }} a été supprimé",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Member {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer le Membre {{ id }} ?"
       },
       "detail": {
-        "title": "Member"
+        "title": "Membre"
       },
       "id": "ID",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "phone": "Phone",
-      "membershipDate": "Membership Date",
-      "active": "Active",
-      "library": "Library"
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Mail",
+      "phone": "Téléphone",
+      "membershipDate": "Date d’adhésion",
+      "active": "Actif",
+      "library": "Bibliothèque"
     }
   }
 }

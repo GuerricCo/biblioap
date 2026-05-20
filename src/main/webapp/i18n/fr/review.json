@@ -2,28 +2,28 @@
   "bibliApp": {
     "review": {
       "home": {
-        "title": "Reviews",
+        "title": "Avis",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Review",
-        "createOrEditLabel": "Créer ou éditer un Review",
-        "notFound": "Aucun Review trouvé"
+        "createLabel": "Créer un nouvel avis",
+        "createOrEditLabel": "Créer ou éditer un avis",
+        "notFound": "Aucun avis trouvé"
       },
-      "created": "Un nouveau Review a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Review avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Review avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouvel avis a été créé avec l'identifiant {{ param }}",
+      "updated": "L'avis' avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "L'avis' avec l'identifiant {{ param }} a été supprimé",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Review {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer l'avis' {{ id }} ?"
       },
       "detail": {
-        "title": "Review"
+        "title": "Avis"
       },
       "id": "ID",
-      "rating": "Rating",
-      "comment": "Comment",
-      "createdAt": "Created At",
-      "library": "Library",
-      "book": "Book",
-      "member": "Member"
+      "rating": "Note",
+      "comment": "Commentaire",
+      "createdAt": "Créé le",
+      "library": "Bibliothèque",
+      "book": "Livre",
+      "member": "Membre"
     }
   }
 }

@@ -2,22 +2,22 @@
   "bibliApp": {
     "adminAuthority": {
       "home": {
-        "title": "Authorities",
+        "title": "Auteurs",
         "refreshListLabel": "Actualiser la liste",
-        "createLabel": "Créer un nouveau Authority",
-        "createOrEditLabel": "Créer ou éditer un Authority",
-        "notFound": "Aucun Authority trouvé"
+        "createLabel": "Créer un nouvel Auteur",
+        "createOrEditLabel": "Créer ou éditer un Auteur",
+        "notFound": "Aucun Auteur trouvé"
       },
-      "created": "Un nouveau Authority a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Authority avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Authority avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouvel Auteur a été créé avec l'identifiant {{ param }}",
+      "updated": "L'Auteur' avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "L'Auteur' avec l'identifiant {{ param }} a été supprimé",
       "delete": {
-        "question": "Êtes-vous certain de vouloir supprimer le Authority {{ id }} ?"
+        "question": "Êtes-vous certain de vouloir supprimer l'Auteur {{ id }} ?"
       },
       "detail": {
-        "title": "Authority"
+        "title": "Auteur"
       },
-      "name": "Name"
+      "name": "Nom"
     }
   }
 }
