@@ -144,6 +144,26 @@ public class Library implements Serializable {
         this.email = email;
     }
 
+    public Set<Book> getBooks() {
+        return this.books;
+    }
+
+    public Set<Member> getMembers() {
+        return this.members;
+    }
+
+    public Set<Loan> getLoans() {
+        return this.loans;
+    }
+
+    public Set<Reservation> getReservations() {
+        return this.reservations;
+    }
+
+    public Set<Review> getReviews() {
+        return this.reviews;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

@@ -5,6 +5,7 @@ import com.bibli.repository.LibraryRepository;
 import com.bibli.service.dto.LibraryDTO;
 import com.bibli.service.mapper.LibraryMapper;
 import java.util.Optional;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,26 @@ public class LibraryService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete Library : {}", id);
-        libraryRepository.deleteById(id);
+        libraryRepository
+            .findById(id)
+            .ifPresent(library -> {
+                Hibernate.initialize(library.getReviews());
+                library.getReviews().clear();
+
+                Hibernate.initialize(library.getLoans());
+                library.getLoans().clear();
+
+                Hibernate.initialize(library.getReservations());
+                library.getReservations().clear();
+
+                Hibernate.initialize(library.getMembers());
+                library.getMembers().clear();
+
+                Hibernate.initialize(library.getBooks());
+                library.getBooks().clear();
+
+                libraryRepository.saveAndFlush(library);
+                libraryRepository.deleteById(id);
+            });
     }
 }
