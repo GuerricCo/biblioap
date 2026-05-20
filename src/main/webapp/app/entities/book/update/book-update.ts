@@ -13,15 +13,13 @@ import { IAuthor } from 'app/entities/author/author.model';
 import { AuthorService } from 'app/entities/author/service/author.service';
 import { ICategory } from 'app/entities/category/category.model';
 import { CategoryService } from 'app/entities/category/service/category.service';
-import { ILibrary } from 'app/entities/library/library.model';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 
 import { IBook } from '../book.model';
 import { BookService } from '../service/book.service';
-
 import { BookFormGroup, BookFormService } from './book-form.service';
-import { LibraryService } from 'app/entities/library/service/library.service';
 
 @Component({
   selector: 'jhi-book-update',
@@ -32,24 +30,20 @@ export class BookUpdate implements OnInit {
   readonly isSaving = signal(false);
   book: IBook | null = null;
 
-  librariesSharedCollection = signal<ILibrary[]>([]);
   categoriesSharedCollection = signal<ICategory[]>([]);
   authorsSharedCollection = signal<IAuthor[]>([]);
 
   protected bookService = inject(BookService);
   protected bookFormService = inject(BookFormService);
-  protected libraryService = inject(LibraryService);
   protected categoryService = inject(CategoryService);
   protected authorService = inject(AuthorService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly libraryContext = inject(LibraryContextService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: BookFormGroup = this.bookFormService.createBookFormGroup();
 
-  compareLibrary = (o1: ILibrary | null, o2: ILibrary | null): boolean => this.libraryService.compareLibrary(o1, o2);
-
   compareCategory = (o1: ICategory | null, o2: ICategory | null): boolean => this.categoryService.compareCategory(o1, o2);
-
   compareAuthor = (o1: IAuthor | null, o2: IAuthor | null): boolean => this.authorService.compareAuthor(o1, o2);
 
   ngOnInit(): void {
@@ -57,6 +51,12 @@ export class BookUpdate implements OnInit {
       this.book = book;
       if (book) {
         this.updateForm(book);
+      } else {
+        // Nouveau livre : pré-remplir la library depuis le contexte
+        const library = this.libraryContext.currentLibrary();
+        if (library) {
+          this.editForm.patchValue({ library });
+        }
       }
 
       this.loadRelationshipsOptions();
@@ -100,9 +100,6 @@ export class BookUpdate implements OnInit {
     this.book = book;
     this.bookFormService.resetForm(this.editForm, book);
 
-    this.librariesSharedCollection.update(libraries =>
-      this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, book.library),
-    );
     this.categoriesSharedCollection.update(categories =>
       this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, book.category),
     );
@@ -112,12 +109,6 @@ export class BookUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.libraryService
-      .query()
-      .pipe(map((res: HttpResponse<ILibrary[]>) => res.body ?? []))
-      .pipe(map((libraries: ILibrary[]) => this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, this.book?.library)))
-      .subscribe((libraries: ILibrary[]) => this.librariesSharedCollection.set(libraries));
-
     this.categoryService
       .query()
       .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))

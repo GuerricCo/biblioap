@@ -1,195 +1,182 @@
-<div>
-  <h2 id="page-heading" data-cy="BookHeading">
-    <span jhiTranslate="bibliApp.book.home.title">Books</span>
-
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+<div class="list-page">
+  <div class="list-header">
+    <div>
+      <h1 jhiTranslate="bibliApp.book.home.title">Books</h1>
+      <p>Gérez les livres de votre bibliothèque</p>
+    </div>
+    <div class="list-header-actions">
+      <button class="btn-refresh" (click)="load()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
-        <span jhiTranslate="bibliApp.book.home.refreshListLabel">Actualiser la liste</span>
+        <span jhiTranslate="bibliApp.book.home.refreshListLabel">Actualiser</span>
       </button>
-
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-book"
-        [routerLink]="['/book/new']"
-      >
+      <button class="btn-create" id="jh-create-entity" data-cy="entityCreateButton" [routerLink]="['/book/new']">
         <fa-icon icon="plus" />
-        <span jhiTranslate="bibliApp.book.home.createLabel">Créer un nouveau Book</span>
+        <span jhiTranslate="bibliApp.book.home.createLabel">Nouveau livre</span>
       </button>
     </div>
-  </h2>
+  </div>
 
   <jhi-alert-error />
-
   <jhi-alert />
-
   <jhi-filter [filters]="filters" />
 
   @if (books().length === 0) {
-    <div class="alert alert-warning" id="no-result">
-      <span jhiTranslate="bibliApp.book.home.notFound">Aucun Book trouvé</span>
+    <div class="list-empty">
+      <fa-icon icon="book" />
+      <p jhiTranslate="bibliApp.book.home.notFound">Aucun livre trouvé</p>
     </div>
   } @else {
-    <div class="table-responsive table-entities" id="entities">
-      <table class="table table-striped" aria-describedby="page-heading">
-        <thead>
-          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
-            <th scope="col" jhiSortBy="id">
-              <div class="d-flex">
-                <span jhiTranslate="global.field.id">ID</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="title">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.title">Title</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="isbn">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.isbn">Isbn</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="publicationDate">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.publicationDate">Publication Date</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="description">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.description">Description</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="language">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.language">Language</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="pages">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.pages">Pages</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="available">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.available">Available</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="totalCopies">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.totalCopies">Total Copies</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="availableCopies">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.availableCopies">Available Copies</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="library.name">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.library">Library</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="category.name">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.book.category">Category</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (book of books(); track trackId(book)) {
-            <tr data-cy="entityTable">
-              <td>
-                <a [routerLink]="['/book', book.id, 'view']">{{ book.id }}</a>
-              </td>
-              <td>{{ book.title }}</td>
-              <td>{{ book.isbn }}</td>
-              <td>{{ book.publicationDate | formatMediumDate }}</td>
-              <td>{{ book.description }}</td>
-              <td>{{ book.language }}</td>
-              <td>{{ book.pages }}</td>
-              <td>{{ book.available }}</td>
-              <td>{{ book.totalCopies }}</td>
-              <td>{{ book.availableCopies }}</td>
-              <td>
-                @if (book.library) {
-                  <div>
-                    <a [routerLink]="['/library', book.library.id, 'view']">{{ book.library.name }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (book.category) {
-                  <div>
-                    <a [routerLink]="['/category', book.category.id, 'view']">{{ book.category.name }}</a>
-                  </div>
-                }
-              </td>
-              <td class="text-end">
-                <div class="btn-group">
-                  <a [routerLink]="['/book', book.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="eye" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
-                  </a>
-
-                  <a [routerLink]="['/book', book.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                    <fa-icon icon="pencil-alt" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
-                  </a>
-
-                  <button type="submit" (click)="delete(book)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                    <fa-icon icon="times" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
-                  </button>
+    <div class="list-card">
+      <div class="table-responsive">
+        <table class="list-table" aria-describedby="page-heading">
+          <thead>
+            <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+              <th scope="col" jhiSortBy="title">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.title">Titre</span>
+                  <fa-icon icon="sort" />
                 </div>
-              </td>
+              </th>
+              <th scope="col" jhiSortBy="isbn">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.isbn">ISBN</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="publicationDate">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.publicationDate">Date de publication</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="language">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.language">Langue</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="available">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.available">Disponible</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="totalCopies">
+                <div class="th-content">
+                  <span>Copies</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="category.name">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.category">Catégorie</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.book.authors">Auteurs</span>
+                </div>
+              </th>
+              <th scope="col"></th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (book of books(); track trackId(book)) {
+              @let reserved = activeReservationsCount(book.id!);
+              @let available = (book.totalCopies ?? 0) - reserved;
+              <tr data-cy="entityTable">
+                <td class="td-title">
+                  <a [routerLink]="['/book', book.id, 'view']">{{ book.title }}</a>
+                </td>
+                <td class="td-mono">{{ book.isbn }}</td>
+                <td>{{ book.publicationDate | formatMediumDate }}</td>
+                <td>
+                  <span class="badge-lang">{{ book.language }}</span>
+                </td>
+                <td>
+                  @if (book.available) {
+                    <span class="badge-status badge-status--yes">Oui</span>
+                  } @else {
+                    <span class="badge-status badge-status--no">Non</span>
+                  }
+                </td>
+                <td>
+                  <div class="copies-cell">
+                    <span
+                      class="badge-copies"
+                      [class.badge-copies--ok]="available > (book.totalCopies ?? 0) / 2"
+                      [class.badge-copies--low]="available > 0 && available <= (book.totalCopies ?? 0) / 2"
+                      [class.badge-copies--none]="available <= 0"
+                    >
+                      {{ available }}/{{ book.totalCopies }}
+                    </span>
+                    @if (reserved > 0) {
+                      <span class="copies-reserved" title="{{ reserved }} réservation(s) active(s)">
+                        <fa-icon icon="clock" /> {{ reserved }}
+                      </span>
+                    }
+                  </div>
+                </td>
+                <td>
+                  @if (book.category) {
+                    <span class="badge-category">{{ book.category.name }}</span>
+                  }
+                </td>
+                <td class="td-authors">
+                  @for (author of book.authorses; track author.id) {
+                    <span class="badge-author">{{ author.firstName }} {{ author.firstName }}</span>
+                  }
+                </td>
+                <td class="td-actions">
+                  <div class="action-group">
+                    <a
+                      [routerLink]="['/book', book.id, 'view']"
+                      class="btn-action btn-action--view"
+                      data-cy="entityDetailsButton"
+                      title="Voir"
+                    >
+                      <fa-icon icon="eye" />
+                    </a>
+                    <a
+                      [routerLink]="['/book', book.id, 'edit']"
+                      class="btn-action btn-action--edit"
+                      data-cy="entityEditButton"
+                      title="Éditer"
+                    >
+                      <fa-icon icon="pencil-alt" />
+                    </a>
+                    <button
+                      type="button"
+                      (click)="delete(book)"
+                      class="btn-action btn-action--delete"
+                      data-cy="entityDeleteButton"
+                      title="Supprimer"
+                    >
+                      <fa-icon icon="times" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   }
-  @if (books().length > 0) {
-    <div>
-      <div class="d-flex justify-content-center">
-        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
-      </div>
 
-      <div class="d-flex justify-content-center">
-        <ngb-pagination
-          [collectionSize]="totalItems()"
-          [page]="page()"
-          [pageSize]="itemsPerPage()"
-          [maxSize]="5"
-          [rotate]="true"
-          [boundaryLinks]="true"
-          (pageChange)="navigateToPage($event)"
-        />
-      </div>
+  @if (books().length > 0) {
+    <div class="list-pagination">
+      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="page()"
+        [pageSize]="itemsPerPage()"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      />
     </div>
   }
 </div>

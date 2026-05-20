@@ -1,160 +1,144 @@
-<div>
-  <h2 id="page-heading" data-cy="ReviewHeading">
-    <span jhiTranslate="bibliApp.review.home.title">Reviews</span>
-
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+<div class="list-page">
+  <div class="list-header">
+    <div>
+      <h1 jhiTranslate="bibliApp.review.home.title">Avis</h1>
+      <p>Gérez les avis sur les livres de votre bibliothèque</p>
+    </div>
+    <div class="list-header-actions">
+      <button class="btn-refresh" (click)="load()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
-        <span jhiTranslate="bibliApp.review.home.refreshListLabel">Actualiser la liste</span>
+        <span jhiTranslate="bibliApp.review.home.refreshListLabel">Actualiser</span>
       </button>
-
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-review"
-        [routerLink]="['/review/new']"
-      >
+      <button class="btn-create" id="jh-create-entity" data-cy="entityCreateButton" [routerLink]="['/review/new']">
         <fa-icon icon="plus" />
-        <span jhiTranslate="bibliApp.review.home.createLabel">Créer un nouveau Review</span>
+        <span jhiTranslate="bibliApp.review.home.createLabel">Nouvel avis</span>
       </button>
     </div>
-  </h2>
+  </div>
 
   <jhi-alert-error />
-
   <jhi-alert />
-
   <jhi-filter [filters]="filters" />
 
   @if (reviews().length === 0) {
-    <div class="alert alert-warning" id="no-result">
-      <span jhiTranslate="bibliApp.review.home.notFound">Aucun Review trouvé</span>
+    <div class="list-empty">
+      <fa-icon icon="star" />
+      <p jhiTranslate="bibliApp.review.home.notFound">Aucun avis trouvé</p>
     </div>
   } @else {
-    <div class="table-responsive table-entities" id="entities">
-      <table class="table table-striped" aria-describedby="page-heading">
-        <thead>
-          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
-            <th scope="col" jhiSortBy="id">
-              <div class="d-flex">
-                <span jhiTranslate="global.field.id">ID</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="rating">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.review.rating">Rating</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="comment">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.review.comment">Comment</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="createdAt">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.review.createdAt">Created At</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="library.name">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.review.library">Library</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="book.title">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.review.book">Book</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="member.email">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.review.member">Member</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (review of reviews(); track trackId(review)) {
-            <tr data-cy="entityTable">
-              <td>
-                <a [routerLink]="['/review', review.id, 'view']">{{ review.id }}</a>
-              </td>
-              <td>{{ review.rating }}</td>
-              <td>{{ review.comment }}</td>
-              <td>{{ review.createdAt | formatMediumDatetime }}</td>
-              <td>
-                @if (review.library) {
-                  <div>
-                    <a [routerLink]="['/library', review.library.id, 'view']">{{ review.library.name }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (review.book) {
-                  <div>
-                    <a [routerLink]="['/book', review.book.id, 'view']">{{ review.book.title }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (review.member) {
-                  <div>
-                    <a [routerLink]="['/member', review.member.id, 'view']">{{ review.member.email }}</a>
-                  </div>
-                }
-              </td>
-              <td class="text-end">
-                <div class="btn-group">
-                  <a [routerLink]="['/review', review.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="eye" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
-                  </a>
-
-                  <a [routerLink]="['/review', review.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                    <fa-icon icon="pencil-alt" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
-                  </a>
-
-                  <button type="submit" (click)="delete(review)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                    <fa-icon icon="times" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
-                  </button>
+    <div class="list-card">
+      <div class="table-responsive">
+        <table class="list-table" aria-describedby="page-heading">
+          <thead>
+            <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+              <th scope="col" jhiSortBy="book.title">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.review.book">Livre</span>
+                  <fa-icon icon="sort" />
                 </div>
-              </td>
+              </th>
+              <th scope="col" jhiSortBy="member.email">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.review.member">Membre</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="rating">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.review.rating">Note</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="comment">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.review.comment">Commentaire</span>
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="createdAt">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.review.createdAt">Date</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col"></th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (review of reviews(); track trackId(review)) {
+              <tr data-cy="entityTable">
+                <td class="td-title">
+                  @if (review.book) {
+                    <a [routerLink]="['/book', review.book.id, 'view']">{{ review.book.title }}</a>
+                  }
+                </td>
+                <td class="td-mono">
+                  @if (review.member) {
+                    <a [routerLink]="['/member', review.member.id, 'view']">{{ review.member.email }}</a>
+                  }
+                </td>
+                <td>
+                  <div class="rating-stars">
+                    @for (star of [1, 2, 3, 4, 5]; track star) {
+                      <fa-icon
+                        icon="star"
+                        [class.star--filled]="star <= (review.rating ?? 0)"
+                        [class.star--empty]="star > (review.rating ?? 0)"
+                      />
+                    }
+                    <span class="rating-value">{{ review.rating }}/5</span>
+                  </div>
+                </td>
+                <td class="td-biography">{{ review.comment }}</td>
+                <td>{{ review.createdAt | formatMediumDatetime }}</td>
+                <td class="td-actions">
+                  <div class="action-group">
+                    <a
+                      [routerLink]="['/review', review.id, 'view']"
+                      class="btn-action btn-action--view"
+                      data-cy="entityDetailsButton"
+                      title="Voir"
+                    >
+                      <fa-icon icon="eye" />
+                    </a>
+                    <a
+                      [routerLink]="['/review', review.id, 'edit']"
+                      class="btn-action btn-action--edit"
+                      data-cy="entityEditButton"
+                      title="Éditer"
+                    >
+                      <fa-icon icon="pencil-alt" />
+                    </a>
+                    <button
+                      type="button"
+                      (click)="delete(review)"
+                      class="btn-action btn-action--delete"
+                      data-cy="entityDeleteButton"
+                      title="Supprimer"
+                    >
+                      <fa-icon icon="times" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   }
-  @if (reviews().length > 0) {
-    <div>
-      <div class="d-flex justify-content-center">
-        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
-      </div>
 
-      <div class="d-flex justify-content-center">
-        <ngb-pagination
-          [collectionSize]="totalItems()"
-          [page]="page()"
-          [pageSize]="itemsPerPage()"
-          [maxSize]="5"
-          [rotate]="true"
-          [boundaryLinks]="true"
-          (pageChange)="navigateToPage($event)"
-        />
-      </div>
+  @if (reviews().length > 0) {
+    <div class="list-pagination">
+      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="page()"
+        [pageSize]="itemsPerPage()"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      />
     </div>
   }
 </div>

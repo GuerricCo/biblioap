@@ -10,16 +10,14 @@ import { finalize, map } from 'rxjs/operators';
 
 import { IBook } from 'app/entities/book/book.model';
 import { BookService } from 'app/entities/book/service/book.service';
-import { ILibrary } from 'app/entities/library/library.model';
-import { LibraryService } from 'app/entities/library/service/library.service';
 import { IMember } from 'app/entities/member/member.model';
 import { MemberService } from 'app/entities/member/service/member.service';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 
 import { IReview } from '../review.model';
 import { ReviewService } from '../service/review.service';
-
 import { ReviewFormGroup, ReviewFormService } from './review-form.service';
 
 @Component({
@@ -31,24 +29,20 @@ export class ReviewUpdate implements OnInit {
   readonly isSaving = signal(false);
   review: IReview | null = null;
 
-  librariesSharedCollection = signal<ILibrary[]>([]);
   booksSharedCollection = signal<IBook[]>([]);
   membersSharedCollection = signal<IMember[]>([]);
 
   protected reviewService = inject(ReviewService);
   protected reviewFormService = inject(ReviewFormService);
-  protected libraryService = inject(LibraryService);
   protected bookService = inject(BookService);
   protected memberService = inject(MemberService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly libraryContext = inject(LibraryContextService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: ReviewFormGroup = this.reviewFormService.createReviewFormGroup();
 
-  compareLibrary = (o1: ILibrary | null, o2: ILibrary | null): boolean => this.libraryService.compareLibrary(o1, o2);
-
   compareBook = (o1: IBook | null, o2: IBook | null): boolean => this.bookService.compareBook(o1, o2);
-
   compareMember = (o1: IMember | null, o2: IMember | null): boolean => this.memberService.compareMember(o1, o2);
 
   ngOnInit(): void {
@@ -56,8 +50,12 @@ export class ReviewUpdate implements OnInit {
       this.review = review;
       if (review) {
         this.updateForm(review);
+      } else {
+        const library = this.libraryContext.currentLibrary();
+        if (library) {
+          this.editForm.patchValue({ library });
+        }
       }
-
       this.loadRelationshipsOptions();
     });
   }
@@ -98,29 +96,21 @@ export class ReviewUpdate implements OnInit {
   protected updateForm(review: IReview): void {
     this.review = review;
     this.reviewFormService.resetForm(this.editForm, review);
-
-    this.librariesSharedCollection.update(libraries =>
-      this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, review.library),
-    );
     this.booksSharedCollection.update(books => this.bookService.addBookToCollectionIfMissing<IBook>(books, review.book));
     this.membersSharedCollection.update(members => this.memberService.addMemberToCollectionIfMissing<IMember>(members, review.member));
   }
 
   protected loadRelationshipsOptions(): void {
-    this.libraryService
-      .query()
-      .pipe(map((res: HttpResponse<ILibrary[]>) => res.body ?? []))
-      .pipe(map((libraries: ILibrary[]) => this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, this.review?.library)))
-      .subscribe((libraries: ILibrary[]) => this.librariesSharedCollection.set(libraries));
+    const libraryId = this.libraryContext.currentLibraryId();
 
     this.bookService
-      .query()
+      .query(libraryId ? { 'libraryId.equals': libraryId } : {})
       .pipe(map((res: HttpResponse<IBook[]>) => res.body ?? []))
       .pipe(map((books: IBook[]) => this.bookService.addBookToCollectionIfMissing<IBook>(books, this.review?.book)))
       .subscribe((books: IBook[]) => this.booksSharedCollection.set(books));
 
     this.memberService
-      .query()
+      .query(libraryId ? { 'libraryId.equals': libraryId } : {})
       .pipe(map((res: HttpResponse<IMember[]>) => res.body ?? []))
       .pipe(map((members: IMember[]) => this.memberService.addMemberToCollectionIfMissing<IMember>(members, this.review?.member)))
       .subscribe((members: IMember[]) => this.membersSharedCollection.set(members));

@@ -8,11 +8,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subscription, combineLatest, filter, tap } from 'rxjs';
+import { Subscription, combineLatest, filter, map, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { LibraryContextService } from 'app/core/library-context/library-context.service';
+import { ReservationStatus } from 'app/entities/enumerations/reservation-status.model';
+import { ReservationService } from 'app/entities/reservation/service/reservation.service';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { FormatMediumDatePipe } from 'app/shared/date';
@@ -54,8 +56,11 @@ export class Book implements OnInit {
   readonly totalItems = signal(0);
   readonly page = signal(1);
 
+  private readonly activeReservations = signal<Map<number, number>>(new Map());
+
   readonly router = inject(Router);
   protected readonly bookService = inject(BookService);
+  protected readonly reservationService = inject(ReservationService);
   readonly isLoading = this.bookService.booksResource.isLoading;
   protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly sortService = inject(SortService);
@@ -85,6 +90,10 @@ export class Book implements OnInit {
 
   trackId = (item: IBook): number => this.bookService.getBookIdentifier(item);
 
+  activeReservationsCount(bookId: number): number {
+    return this.activeReservations().get(bookId) ?? 0;
+  }
+
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
       .pipe(
@@ -107,6 +116,7 @@ export class Book implements OnInit {
 
   load(): void {
     this.queryBackend();
+    this.loadActiveReservations();
   }
 
   navigateToWithComponentValues(event: SortState): void {
@@ -115,6 +125,31 @@ export class Book implements OnInit {
 
   navigateToPage(page: number): void {
     this.handleNavigation(page, this.sortState(), this.filters.filterOptions);
+  }
+
+  protected loadActiveReservations(): void {
+    const queryObject: any = {
+      size: 1000,
+      eagerload: true,
+      'status.in': [ReservationStatus.WAITING, ReservationStatus.READY],
+    };
+    const libraryId = this.libraryContext.currentLibraryId();
+    if (libraryId) {
+      queryObject['libraryId.equals'] = libraryId;
+    }
+
+    this.reservationService
+      .query(queryObject)
+      .pipe(map(res => res.body ?? []))
+      .subscribe(reservations => {
+        const counts = new Map<number, number>();
+        for (const r of reservations) {
+          if (r.book?.id != null) {
+            counts.set(r.book.id, (counts.get(r.book.id) ?? 0) + 1);
+          }
+        }
+        this.activeReservations.set(counts);
+      });
   }
 
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {

@@ -1,59 +1,66 @@
-<div class="d-flex justify-content-center">
-  <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-category-heading" data-cy="CategoryCreateUpdateHeading" jhiTranslate="bibliApp.category.home.createOrEditLabel">
-        Créer ou éditer un Category
-      </h2>
-
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="form-card-header-icon">
+        <fa-icon icon="book-open" />
+      </div>
       <div>
-        <jhi-alert-error />
+        <h1 data-cy="CategoryCreateUpdateHeading">
+          {{ editForm.controls.id.value !== null ? 'Éditer la catégorie' : 'Nouvelle catégorie' }}
+        </h1>
+        <p>Renseignez les informations de la catégorie</p>
+      </div>
+    </div>
 
-        @if (editForm.controls.id.value !== null) {
-          <div class="mb-3">
-            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-          </div>
-        }
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <jhi-alert-error />
 
-        @let nameRef = editForm.get('name')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_name" jhiTranslate="bibliApp.category.name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
-          @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
-            <div>
-              @if (editForm.get('name')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
-              }
-            </div>
+      @if (editForm.controls.id.value !== null) {
+        <div class="form-field">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+      }
+
+      <div class="form-section-title">Informations</div>
+
+      @let nameRef = editForm.get('name')!;
+      <div class="form-field">
+        <label class="form-label" for="field_name" jhiTranslate="bibliApp.category.name">Nom</label>
+        <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+        @if (nameRef.invalid && (nameRef.dirty || nameRef.touched)) {
+          @if (nameRef.errors?.required) {
+            <small class="form-error" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
           }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_description" jhiTranslate="bibliApp.category.description">Description</label>
-          <input
-            type="text"
-            class="form-control"
-            name="description"
-            id="field_description"
-            data-cy="description"
-            formControlName="description"
-          />
-        </div>
+        }
       </div>
 
-      <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Annuler</span>
-        </button>
+      <div class="form-field">
+        <label class="form-label" for="field_description" jhiTranslate="bibliApp.category.description">Description</label>
+        <input
+          type="text"
+          class="form-control"
+          name="description"
+          id="field_description"
+          data-cy="description"
+          formControlName="description"
+        />
+      </div>
 
+      <div class="form-actions">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn-cancel" (click)="previousState()">
+          <fa-icon icon="ban" />
+          <span jhiTranslate="entity.action.cancel">Annuler</span>
+        </button>
         <button
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
           [disabled]="editForm.invalid || isSaving()"
-          class="btn btn-primary"
+          class="btn-save"
         >
-          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Sauvegarder</span>
+          <fa-icon icon="save" />
+          <span jhiTranslate="entity.action.save">Sauvegarder</span>
         </button>
       </div>
     </form>

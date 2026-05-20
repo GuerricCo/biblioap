@@ -1,121 +1,117 @@
-<div class="d-flex justify-content-center">
-  <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-reservation-heading" data-cy="ReservationCreateUpdateHeading" jhiTranslate="bibliApp.reservation.home.createOrEditLabel">
-        Créer ou éditer un Reservation
-      </h2>
-
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <div class="form-card-header-icon">
+        <fa-icon icon="book-open" />
+      </div>
       <div>
-        <jhi-alert-error />
+        <h1 data-cy="ReservationCreateUpdateHeading">
+          {{ editForm.controls.id.value !== null ? 'Éditer la réservation' : 'Nouvelle réservation' }}
+        </h1>
+        <p>Renseignez les informations de la réservation</p>
+      </div>
+    </div>
 
-        @if (editForm.controls.id.value !== null) {
-          <div class="mb-3">
-            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
-            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-          </div>
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <jhi-alert-error />
+
+      @if (editForm.controls.id.value !== null) {
+        <div class="form-field">
+          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+      }
+
+      <div class="form-section-title">Informations générales</div>
+
+      @let reservationDateRef = editForm.get('reservationDate')!;
+      <div class="form-field">
+        <label class="form-label" for="field_reservationDate" jhiTranslate="bibliApp.reservation.reservationDate"
+          >Date de réservation</label
+        >
+        <div class="input-group">
+          <input
+            id="field_reservationDate"
+            data-cy="reservationDate"
+            type="text"
+            class="form-control"
+            name="reservationDate"
+            ngbDatepicker
+            #reservationDateDp="ngbDatepicker"
+            formControlName="reservationDate"
+          />
+          <button type="button" class="btn-datepicker" (click)="reservationDateDp.toggle()">
+            <fa-icon icon="calendar-alt" />
+          </button>
+        </div>
+        @if (reservationDateRef.invalid && (reservationDateRef.dirty || reservationDateRef.touched)) {
+          @if (reservationDateRef.errors?.required) {
+            <small class="form-error" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+          }
         }
-
-        @let reservationDateRef = editForm.get('reservationDate')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_reservationDate" jhiTranslate="bibliApp.reservation.reservationDate">Reservation Date</label>
-          <div class="input-group">
-            <input
-              id="field_reservationDate"
-              data-cy="reservationDate"
-              type="text"
-              class="form-control"
-              name="reservationDate"
-              ngbDatepicker
-              #reservationDateDp="ngbDatepicker"
-              formControlName="reservationDate"
-            />
-            <button type="button" class="btn btn-secondary" (click)="reservationDateDp.toggle()"><fa-icon icon="calendar-alt" /></button>
-          </div>
-          @if (reservationDateRef.invalid && (reservationDateRef.dirty || reservationDateRef.touched)) {
-            <div>
-              @if (editForm.get('reservationDate')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
-              }
-            </div>
-          }
-        </div>
-
-        @let statusRef = editForm.get('status')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_status" jhiTranslate="bibliApp.reservation.status">Status</label>
-          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
-            <option [ngValue]="null">{{ 'bibliApp.ReservationStatus.null' | translate }}</option>
-            @for (reservationStatus of reservationStatusValues; track $index) {
-              <option [value]="reservationStatus">{{ 'bibliApp.ReservationStatus.' + reservationStatus | translate }}</option>
-            }
-          </select>
-          @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
-            <div>
-              @if (editForm.get('status')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_library" jhiTranslate="bibliApp.reservation.library">Library</label>
-          <select
-            class="form-control"
-            id="field_library"
-            data-cy="library"
-            name="library"
-            formControlName="library"
-            [compareWith]="compareLibrary"
-          >
-            <option [ngValue]="null"></option>
-            @for (libraryOption of librariesSharedCollection(); track $index) {
-              <option [ngValue]="libraryOption">{{ libraryOption.name }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_book" jhiTranslate="bibliApp.reservation.book">Book</label>
-          <select class="form-control" id="field_book" data-cy="book" name="book" formControlName="book" [compareWith]="compareBook">
-            <option [ngValue]="null"></option>
-            @for (bookOption of booksSharedCollection(); track $index) {
-              <option [ngValue]="bookOption">{{ bookOption.title }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_member" jhiTranslate="bibliApp.reservation.member">Member</label>
-          <select
-            class="form-control"
-            id="field_member"
-            data-cy="member"
-            name="member"
-            formControlName="member"
-            [compareWith]="compareMember"
-          >
-            <option [ngValue]="null"></option>
-            @for (memberOption of membersSharedCollection(); track $index) {
-              <option [ngValue]="memberOption">{{ memberOption.email }}</option>
-            }
-          </select>
-        </div>
       </div>
 
-      <div>
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Annuler</span>
-        </button>
+      @let statusRef = editForm.get('status')!;
+      <div class="form-field">
+        <label class="form-label" for="field_status" jhiTranslate="bibliApp.reservation.status">Statut</label>
+        <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+          <option [ngValue]="null">{{ 'bibliApp.ReservationStatus.null' | translate }}</option>
+          @for (reservationStatus of reservationStatusValues; track $index) {
+            <option [value]="reservationStatus">{{ 'bibliApp.ReservationStatus.' + reservationStatus | translate }}</option>
+          }
+        </select>
+        @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
+          @if (statusRef.errors?.required) {
+            <small class="form-error" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+          }
+        }
+      </div>
 
+      <div class="form-section-title">Relations</div>
+
+      <div class="form-field">
+        <label class="form-label" for="field_book" jhiTranslate="bibliApp.reservation.book">Livre</label>
+        <select class="form-control" id="field_book" data-cy="book" name="book" formControlName="book" [compareWith]="compareBook">
+          <option [ngValue]="null">-- Sélectionner --</option>
+          @for (bookOption of booksSharedCollection(); track $index) {
+            <option [ngValue]="bookOption">{{ bookOption.title }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="field_member" jhiTranslate="bibliApp.reservation.member">Membre</label>
+        <select
+          class="form-control"
+          id="field_member"
+          data-cy="member"
+          name="member"
+          formControlName="member"
+          [compareWith]="compareMember"
+        >
+          <option [ngValue]="null">-- Sélectionner --</option>
+          @for (memberOption of membersSharedCollection(); track $index) {
+            <option [ngValue]="memberOption">{{ memberOption.email }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Library assignée automatiquement depuis le contexte -->
+
+      <div class="form-actions">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn-cancel" (click)="previousState()">
+          <fa-icon icon="ban" />
+          <span jhiTranslate="entity.action.cancel">Annuler</span>
+        </button>
         <button
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
           [disabled]="editForm.invalid || isSaving()"
-          class="btn btn-primary"
+          class="btn-save"
         >
-          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Sauvegarder</span>
+          <fa-icon icon="save" />
+          <span jhiTranslate="entity.action.save">Sauvegarder</span>
         </button>
       </div>
     </form>

@@ -12,17 +12,15 @@ import { finalize, map } from 'rxjs/operators';
 import { IBook } from 'app/entities/book/book.model';
 import { BookService } from 'app/entities/book/service/book.service';
 import { ReservationStatus } from 'app/entities/enumerations/reservation-status.model';
-import { ILibrary } from 'app/entities/library/library.model';
-import { LibraryService } from 'app/entities/library/service/library.service';
+import { IMember } from 'app/entities/member/member.model';
+import { MemberService } from 'app/entities/member/service/member.service';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 
 import { IReservation } from '../reservation.model';
 import { ReservationService } from '../service/reservation.service';
-
 import { ReservationFormGroup, ReservationFormService } from './reservation-form.service';
-import { IMember } from 'app/entities/member/member.model';
-import { MemberService } from 'app/entities/member/service/member.service';
 
 @Component({
   selector: 'jhi-reservation-update',
@@ -34,24 +32,20 @@ export class ReservationUpdate implements OnInit {
   reservation: IReservation | null = null;
   reservationStatusValues = Object.keys(ReservationStatus);
 
-  librariesSharedCollection = signal<ILibrary[]>([]);
   booksSharedCollection = signal<IBook[]>([]);
   membersSharedCollection = signal<IMember[]>([]);
 
   protected reservationService = inject(ReservationService);
   protected reservationFormService = inject(ReservationFormService);
-  protected libraryService = inject(LibraryService);
   protected bookService = inject(BookService);
   protected memberService = inject(MemberService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly libraryContext = inject(LibraryContextService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: ReservationFormGroup = this.reservationFormService.createReservationFormGroup();
 
-  compareLibrary = (o1: ILibrary | null, o2: ILibrary | null): boolean => this.libraryService.compareLibrary(o1, o2);
-
   compareBook = (o1: IBook | null, o2: IBook | null): boolean => this.bookService.compareBook(o1, o2);
-
   compareMember = (o1: IMember | null, o2: IMember | null): boolean => this.memberService.compareMember(o1, o2);
 
   ngOnInit(): void {
@@ -59,6 +53,12 @@ export class ReservationUpdate implements OnInit {
       this.reservation = reservation;
       if (reservation) {
         this.updateForm(reservation);
+      } else {
+        // Nouveau : on rattache automatiquement la library courante
+        const library = this.libraryContext.currentLibrary();
+        if (library) {
+          this.editForm.patchValue({ library });
+        }
       }
 
       this.loadRelationshipsOptions();
@@ -102,30 +102,31 @@ export class ReservationUpdate implements OnInit {
     this.reservation = reservation;
     this.reservationFormService.resetForm(this.editForm, reservation);
 
-    this.librariesSharedCollection.update(libraries =>
-      this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, reservation.library),
-    );
     this.booksSharedCollection.update(books => this.bookService.addBookToCollectionIfMissing<IBook>(books, reservation.book));
     this.membersSharedCollection.update(members => this.memberService.addMemberToCollectionIfMissing<IMember>(members, reservation.member));
   }
 
   protected loadRelationshipsOptions(): void {
-    this.libraryService
-      .query()
-      .pipe(map((res: HttpResponse<ILibrary[]>) => res.body ?? []))
-      .pipe(
-        map((libraries: ILibrary[]) => this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, this.reservation?.library)),
-      )
-      .subscribe((libraries: ILibrary[]) => this.librariesSharedCollection.set(libraries));
+    const libraryId = this.libraryContext.currentLibraryId();
 
+    // Uniquement les livres de la library courante
+    const bookQuery: any = { size: 1000 };
+    if (libraryId) {
+      bookQuery['libraryId.equals'] = libraryId;
+    }
     this.bookService
-      .query()
+      .query(bookQuery)
       .pipe(map((res: HttpResponse<IBook[]>) => res.body ?? []))
       .pipe(map((books: IBook[]) => this.bookService.addBookToCollectionIfMissing<IBook>(books, this.reservation?.book)))
       .subscribe((books: IBook[]) => this.booksSharedCollection.set(books));
 
+    // Uniquement les membres de la library courante
+    const memberQuery: any = { size: 1000 };
+    if (libraryId) {
+      memberQuery['libraryId.equals'] = libraryId;
+    }
     this.memberService
-      .query()
+      .query(memberQuery)
       .pipe(map((res: HttpResponse<IMember[]>) => res.body ?? []))
       .pipe(map((members: IMember[]) => this.memberService.addMemberToCollectionIfMissing<IMember>(members, this.reservation?.member)))
       .subscribe((members: IMember[]) => this.membersSharedCollection.set(members));

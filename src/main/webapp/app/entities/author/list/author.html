@@ -1,137 +1,131 @@
-<div>
-  <h2 id="page-heading" data-cy="AuthorHeading">
-    <span jhiTranslate="bibliApp.author.home.title">Authors</span>
-
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+<div class="list-page">
+  <div class="list-header">
+    <div>
+      <h1 jhiTranslate="bibliApp.author.home.title">Auteurs</h1>
+      <p>Gérez les auteurs de votre bibliothèque</p>
+    </div>
+    <div class="list-header-actions">
+      <button class="btn-refresh" (click)="load()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
-        <span jhiTranslate="bibliApp.author.home.refreshListLabel">Actualiser la liste</span>
+        <span jhiTranslate="bibliApp.author.home.refreshListLabel">Actualiser</span>
       </button>
-
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-author"
-        [routerLink]="['/author/new']"
-      >
+      <button class="btn-create" id="jh-create-entity" data-cy="entityCreateButton" [routerLink]="['/author/new']">
         <fa-icon icon="plus" />
-        <span jhiTranslate="bibliApp.author.home.createLabel">Créer un nouveau Author</span>
+        <span jhiTranslate="bibliApp.author.home.createLabel">Nouvel auteur</span>
       </button>
     </div>
-  </h2>
+  </div>
 
   <jhi-alert-error />
-
   <jhi-alert />
-
   <jhi-filter [filters]="filters" />
 
   @if (authors().length === 0) {
-    <div class="alert alert-warning" id="no-result">
-      <span jhiTranslate="bibliApp.author.home.notFound">Aucun Author trouvé</span>
+    <div class="list-empty">
+      <fa-icon icon="user" />
+      <p jhiTranslate="bibliApp.author.home.notFound">Aucun auteur trouvé</p>
     </div>
   } @else {
-    <div class="table-responsive table-entities" id="entities">
-      <table class="table table-striped" aria-describedby="page-heading">
-        <thead>
-          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
-            <th scope="col" jhiSortBy="id">
-              <div class="d-flex">
-                <span jhiTranslate="global.field.id">ID</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="firstName">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.author.firstName">First Name</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="lastName">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.author.lastName">Last Name</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="birthDate">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.author.birthDate">Birth Date</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="nationality">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.author.nationality">Nationality</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="biography">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.author.biography">Biography</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (author of authors(); track trackId(author)) {
-            <tr data-cy="entityTable">
-              <td>
-                <a [routerLink]="['/author', author.id, 'view']">{{ author.id }}</a>
-              </td>
-              <td>{{ author.firstName }}</td>
-              <td>{{ author.lastName }}</td>
-              <td>{{ author.birthDate | formatMediumDate }}</td>
-              <td>{{ author.nationality }}</td>
-              <td>{{ author.biography }}</td>
-              <td class="text-end">
-                <div class="btn-group">
-                  <a [routerLink]="['/author', author.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="eye" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
-                  </a>
-
-                  <a [routerLink]="['/author', author.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                    <fa-icon icon="pencil-alt" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
-                  </a>
-
-                  <button type="submit" (click)="delete(author)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                    <fa-icon icon="times" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
-                  </button>
+    <div class="list-card">
+      <div class="table-responsive">
+        <table class="list-table" aria-describedby="page-heading">
+          <thead>
+            <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+              <th scope="col" jhiSortBy="firstName">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.author.firstName">Prénom</span>
+                  <fa-icon icon="sort" />
                 </div>
-              </td>
+              </th>
+              <th scope="col" jhiSortBy="lastName">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.author.lastName">Nom</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="birthDate">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.author.birthDate">Date de naissance</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="nationality">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.author.nationality">Nationalité</span>
+                  <fa-icon icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="biography">
+                <div class="th-content">
+                  <span jhiTranslate="bibliApp.author.biography">Biographie</span>
+                </div>
+              </th>
+              <th scope="col"></th>
             </tr>
-          }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @for (author of authors(); track trackId(author)) {
+              <tr data-cy="entityTable">
+                <td class="td-title">
+                  <a [routerLink]="['/author', author.id, 'view']">{{ author.firstName }}</a>
+                </td>
+                <td class="td-title">{{ author.lastName }}</td>
+                <td>{{ author.birthDate | formatMediumDate }}</td>
+                <td>
+                  @if (author.nationality) {
+                    <span class="badge-lang">{{ author.nationality }}</span>
+                  }
+                </td>
+                <td class="td-biography">{{ author.biography }}</td>
+                <td class="td-actions">
+                  <div class="action-group">
+                    <a
+                      [routerLink]="['/author', author.id, 'view']"
+                      class="btn-action btn-action--view"
+                      data-cy="entityDetailsButton"
+                      title="Voir"
+                    >
+                      <fa-icon icon="eye" />
+                    </a>
+                    <a
+                      [routerLink]="['/author', author.id, 'edit']"
+                      class="btn-action btn-action--edit"
+                      data-cy="entityEditButton"
+                      title="Éditer"
+                    >
+                      <fa-icon icon="pencil-alt" />
+                    </a>
+                    <button
+                      type="button"
+                      (click)="delete(author)"
+                      class="btn-action btn-action--delete"
+                      data-cy="entityDeleteButton"
+                      title="Supprimer"
+                    >
+                      <fa-icon icon="times" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   }
-  @if (authors().length > 0) {
-    <div>
-      <div class="d-flex justify-content-center">
-        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
-      </div>
 
-      <div class="d-flex justify-content-center">
-        <ngb-pagination
-          [collectionSize]="totalItems()"
-          [page]="page()"
-          [pageSize]="itemsPerPage()"
-          [maxSize]="5"
-          [rotate]="true"
-          [boundaryLinks]="true"
-          (pageChange)="navigateToPage($event)"
-        />
-      </div>
+  @if (authors().length > 0) {
+    <div class="list-pagination">
+      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      <ngb-pagination
+        [collectionSize]="totalItems()"
+        [page]="page()"
+        [pageSize]="itemsPerPage()"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      />
     </div>
   }
 </div>

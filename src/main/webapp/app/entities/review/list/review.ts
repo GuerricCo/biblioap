@@ -12,6 +12,7 @@ import { Subscription, combineLatest, filter, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { FormatMediumDatetimePipe } from 'app/shared/date';
@@ -61,6 +62,7 @@ export class Review implements OnInit {
   protected readonly sortService = inject(SortService);
   protected readonly filterOptions = toSignal(this.filters.filterChanges);
   protected modalService = inject(NgbModal);
+  private readonly libraryContext = inject(LibraryContextService);
 
   constructor() {
     effect(() => {
@@ -77,7 +79,6 @@ export class Review implements OnInit {
       const filterOptions = this.filterOptions();
       if (filterOptions) {
         untracked(() => {
-          // Only watch for filter changes. Other signals should be ignored.
           this.handleNavigation(1, this.sortState(), filterOptions);
         });
       }
@@ -98,7 +99,6 @@ export class Review implements OnInit {
   delete(review: IReview): void {
     const modalRef = this.modalService.open(ReviewDeleteDialog, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.review = review;
-    // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
@@ -144,6 +144,11 @@ export class Review implements OnInit {
     };
     for (const filterOption of this.filters.filterOptions) {
       queryObject[filterOption.name] = filterOption.values;
+    }
+    // Filtre par bibliothèque courante
+    const libraryId = this.libraryContext.currentLibraryId();
+    if (libraryId) {
+      queryObject['libraryId.equals'] = libraryId;
     }
     this.reviewService.reviewsParams.set(queryObject);
   }

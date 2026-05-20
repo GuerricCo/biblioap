@@ -11,7 +11,6 @@ import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { ICategory } from '../category.model';
 import { CategoryService } from '../service/category.service';
-
 import { CategoryFormGroup, CategoryFormService } from './category-form.service';
 
 @Component({

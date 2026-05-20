@@ -1,4 +1,3 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -7,15 +6,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
-import { ILibrary } from 'app/entities/library/library.model';
-import { LibraryService } from 'app/entities/library/service/library.service';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { IMember } from '../member.model';
 import { MemberService } from '../service/member.service';
-
 import { MemberFormGroup, MemberFormService } from './member-form.service';
 
 @Component({
@@ -27,26 +24,26 @@ export class MemberUpdate implements OnInit {
   readonly isSaving = signal(false);
   member: IMember | null = null;
 
-  librariesSharedCollection = signal<ILibrary[]>([]);
-
   protected memberService = inject(MemberService);
   protected memberFormService = inject(MemberFormService);
-  protected libraryService = inject(LibraryService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly libraryContext = inject(LibraryContextService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: MemberFormGroup = this.memberFormService.createMemberFormGroup();
-
-  compareLibrary = (o1: ILibrary | null, o2: ILibrary | null): boolean => this.libraryService.compareLibrary(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ member }) => {
       this.member = member;
       if (member) {
         this.updateForm(member);
+      } else {
+        // Nouveau membre : pré-remplir la library depuis le contexte
+        const library = this.libraryContext.currentLibrary();
+        if (library) {
+          this.editForm.patchValue({ library });
+        }
       }
-
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -86,17 +83,5 @@ export class MemberUpdate implements OnInit {
   protected updateForm(member: IMember): void {
     this.member = member;
     this.memberFormService.resetForm(this.editForm, member);
-
-    this.librariesSharedCollection.update(libraries =>
-      this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, member.library),
-    );
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.libraryService
-      .query()
-      .pipe(map((res: HttpResponse<ILibrary[]>) => res.body ?? []))
-      .pipe(map((libraries: ILibrary[]) => this.libraryService.addLibraryToCollectionIfMissing<ILibrary>(libraries, this.member?.library)))
-      .subscribe((libraries: ILibrary[]) => this.librariesSharedCollection.set(libraries));
   }
 }
