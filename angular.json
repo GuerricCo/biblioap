@@ -62,6 +62,9 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
+              "define": {
+                "SERVER_API_URL": "'https://biblioap-production.up.railway.app/'"
+              },
               "budgets": [
                 {
                   "type": "initial",
