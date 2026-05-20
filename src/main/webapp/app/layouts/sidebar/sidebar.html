@@ -1,7 +1,19 @@
 @if (!isAuthPage()) {
   <aside class="sidebar">
     <nav class="sidebar-nav">
-      <!-- CATALOGUE -->
+      @if (currentLibrary()) {
+        <div class="sidebar-library-header">
+          <div class="sidebar-library-avatar">
+            {{ currentLibrary()!.name!.charAt(0).toUpperCase() }}
+          </div>
+          <div class="sidebar-library-info">
+            <span class="sidebar-library-name">{{ currentLibrary()!.name }}</span>
+            <a class="sidebar-library-change" routerLink="/library">Changer</a>
+          </div>
+        </div>
+        <div class="sidebar-divider"></div>
+      }
+
       @if (account() !== null) {
         <div class="sidebar-section">
           <span class="sidebar-section-label">Catalogue</span>
@@ -9,39 +21,33 @@
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/book"
+                [routerLink]="['/app', libraryId(), 'books']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="book-open" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="book-open" /></span>
                 <span>Livres</span>
               </a>
             </li>
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/author"
+                [routerLink]="['/app', libraryId(), 'authors']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="users" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="users" /></span>
                 <span>Auteurs</span>
               </a>
             </li>
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/category"
+                [routerLink]="['/app', libraryId(), 'categories']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="th-large" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="th-large" /></span>
                 <span>Catégories</span>
               </a>
             </li>
@@ -50,46 +56,39 @@
 
         <div class="sidebar-divider"></div>
 
-        <!-- GESTION -->
         <div class="sidebar-section">
           <span class="sidebar-section-label">Gestion</span>
           <ul class="sidebar-menu">
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/member"
+                [routerLink]="['/app', libraryId(), 'members']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="user" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="user" /></span>
                 <span>Membres</span>
               </a>
             </li>
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/loan"
+                [routerLink]="['/app', libraryId(), 'loans']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="file-alt" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="file-alt" /></span>
                 <span>Prêts</span>
               </a>
             </li>
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/reservation"
+                [routerLink]="['/app', libraryId(), 'reservations']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="list" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="list" /></span>
                 <span>Réservations</span>
               </a>
             </li>
@@ -98,20 +97,17 @@
 
         <div class="sidebar-divider"></div>
 
-        <!-- AVIS -->
         <div class="sidebar-section">
           <span class="sidebar-section-label">Avis</span>
           <ul class="sidebar-menu">
             <li>
               <a
                 class="sidebar-link"
-                routerLink="/review"
+                [routerLink]="['/app', libraryId(), 'reviews']"
                 routerLinkActive="sidebar-link--active"
                 [routerLinkActiveOptions]="{ exact: false }"
               >
-                <span class="sidebar-icon">
-                  <fa-icon icon="star" />
-                </span>
+                <span class="sidebar-icon"><fa-icon icon="star" /></span>
                 <span>Avis &amp; notes</span>
               </a>
             </li>

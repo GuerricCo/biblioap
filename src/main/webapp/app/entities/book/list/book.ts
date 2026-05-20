@@ -12,6 +12,7 @@ import { Subscription, combineLatest, filter, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { FormatMediumDatePipe } from 'app/shared/date';
@@ -55,12 +56,12 @@ export class Book implements OnInit {
 
   readonly router = inject(Router);
   protected readonly bookService = inject(BookService);
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   readonly isLoading = this.bookService.booksResource.isLoading;
   protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly sortService = inject(SortService);
   protected readonly filterOptions = toSignal(this.filters.filterChanges);
   protected modalService = inject(NgbModal);
+  private readonly libraryContext = inject(LibraryContextService);
 
   constructor() {
     effect(() => {
@@ -72,12 +73,10 @@ export class Book implements OnInit {
     effect(() => {
       this.books.set(this.fillComponentAttributesFromResponseBody([...this.bookService.books()]));
     });
-
     effect(() => {
       const filterOptions = this.filterOptions();
       if (filterOptions) {
         untracked(() => {
-          // Only watch for filter changes. Other signals should be ignored.
           this.handleNavigation(1, this.sortState(), filterOptions);
         });
       }
@@ -98,7 +97,6 @@ export class Book implements OnInit {
   delete(book: IBook): void {
     const modalRef = this.modalService.open(BookDeleteDialog, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.book = book;
-    // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
@@ -145,6 +143,10 @@ export class Book implements OnInit {
     for (const filterOption of this.filters.filterOptions) {
       queryObject[filterOption.name] = filterOption.values;
     }
+    const libraryId = this.libraryContext.currentLibraryId();
+    if (libraryId) {
+      queryObject['libraryId.equals'] = libraryId;
+    }
     this.bookService.booksParams.set(queryObject);
   }
 
@@ -154,13 +156,11 @@ export class Book implements OnInit {
       size: this.itemsPerPage(),
       sort: this.sortService.buildSortParam(sortState),
     };
-
     if (filterOptions) {
       for (const filterOption of filterOptions) {
         queryParamsObj[filterOption.nameAsQueryParam()] = filterOption.values;
       }
     }
-
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,
       queryParams: queryParamsObj,

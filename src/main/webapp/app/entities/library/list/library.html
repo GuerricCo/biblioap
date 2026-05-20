@@ -1,116 +1,100 @@
-<div>
-  <h2 id="page-heading" data-cy="LibraryHeading">
-    <span jhiTranslate="bibliApp.library.home.title">Libraries</span>
-
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+<div class="library-page">
+  <!-- Header -->
+  <div class="library-header">
+    <div class="library-header-left">
+      <div class="library-header-icon">
+        <fa-icon icon="book-open" />
+      </div>
+      <div>
+        <h1>Bibliothèques</h1>
+        <p>Gérez vos bibliothèques enregistrées</p>
+      </div>
+    </div>
+    <div class="library-header-actions">
+      <button class="btn-refresh" (click)="load()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
-        <span jhiTranslate="bibliApp.library.home.refreshListLabel">Actualiser la liste</span>
+        <span>Actualiser</span>
       </button>
-
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-library"
-        [routerLink]="['/library/new']"
-      >
+      <button class="btn-create" [routerLink]="['/library/new']" id="jh-create-entity" data-cy="entityCreateButton">
         <fa-icon icon="plus" />
-        <span jhiTranslate="bibliApp.library.home.createLabel">Créer un nouveau Library</span>
+        <span>Nouvelle bibliothèque</span>
       </button>
     </div>
-  </h2>
+  </div>
 
   <jhi-alert-error />
-
   <jhi-alert />
 
-  @if (libraries().length === 0) {
-    <div class="alert alert-warning" id="no-result">
-      <span jhiTranslate="bibliApp.library.home.notFound">Aucun Library trouvé</span>
+  <!-- Empty state -->
+  @if (libraries().length === 0 && !isLoading()) {
+    <div class="library-empty">
+      <div class="library-empty-icon">
+        <fa-icon icon="book-open" />
+      </div>
+      <h3>Aucune bibliothèque trouvée</h3>
+      <p>Commencez par créer votre première bibliothèque.</p>
+      <button class="btn-create" [routerLink]="['/library/new']">
+        <fa-icon icon="plus" />
+        <span>Créer une bibliothèque</span>
+      </button>
     </div>
-  } @else {
-    <div class="table-responsive table-entities" id="entities">
-      <table class="table table-striped" aria-describedby="page-heading">
-        <thead>
-          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
-            <th scope="col" jhiSortBy="id">
-              <div class="d-flex">
-                <span jhiTranslate="global.field.id">ID</span>
+  }
 
-                <fa-icon class="p-1" icon="sort" />
+  <!-- Cards grid -->
+  @if (libraries().length > 0) {
+    <div class="library-grid">
+      @for (library of libraries(); track trackId(library)) {
+        <div class="library-card" (click)="openLibrary(library)" style="cursor: pointer" data-cy="entityTable">
+          <div class="library-card-header">
+            <div class="library-card-avatar">
+              {{ library.name ? library.name.charAt(0).toUpperCase() : '?' }}
+            </div>
+            <div class="library-card-title">
+              <h3>{{ library.name }}</h3>
+            </div>
+          </div>
+
+          <div class="library-card-body">
+            @if (library.address || library.city) {
+              <div class="library-card-info">
+                <span>{{ library.address }}{{ library.address && library.city ? ', ' : '' }}{{ library.city }}</span>
               </div>
-            </th>
-            <th scope="col" jhiSortBy="name">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.library.name">Name</span>
-
-                <fa-icon class="p-1" icon="sort" />
+            }
+            @if (library.phone) {
+              <div class="library-card-info">
+                <span>{{ library.phone }}</span>
               </div>
-            </th>
-            <th scope="col" jhiSortBy="address">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.library.address">Address</span>
-
-                <fa-icon class="p-1" icon="sort" />
+            }
+            @if (library.email) {
+              <div class="library-card-info">
+                <fa-icon icon="envelope" class="info-icon" />
+                <span>{{ library.email }}</span>
               </div>
-            </th>
-            <th scope="col" jhiSortBy="city">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.library.city">City</span>
+            }
+          </div>
 
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="phone">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.library.phone">Phone</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="email">
-              <div class="d-flex">
-                <span jhiTranslate="bibliApp.library.email">Email</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (library of libraries(); track trackId(library)) {
-            <tr data-cy="entityTable">
-              <td>
-                <a [routerLink]="['/library', library.id, 'view']">{{ library.id }}</a>
-              </td>
-              <td>{{ library.name }}</td>
-              <td>{{ library.address }}</td>
-              <td>{{ library.city }}</td>
-              <td>{{ library.phone }}</td>
-              <td>{{ library.email }}</td>
-              <td class="text-end">
-                <div class="btn-group">
-                  <a [routerLink]="['/library', library.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="eye" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
-                  </a>
-
-                  <a [routerLink]="['/library', library.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                    <fa-icon icon="pencil-alt" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
-                  </a>
-
-                  <button type="submit" (click)="delete(library)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                    <fa-icon icon="times" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+          <div class="library-card-footer">
+            <a
+              [routerLink]="['/library', library.id, 'edit']"
+              class="card-btn card-btn--edit"
+              (click)="$event.stopPropagation()"
+              data-cy="entityEditButton"
+            >
+              <fa-icon icon="pencil-alt" />
+              <span>Éditer</span>
+            </a>
+            <button
+              type="button"
+              (click)="delete(library); $event.stopPropagation()"
+              class="card-btn card-btn--delete"
+              data-cy="entityDeleteButton"
+            >
+              <fa-icon icon="trash-alt" />
+              <span>Supprimer</span>
+            </button>
+          </div>
+        </div>
+      }
     </div>
   }
 </div>

@@ -245,12 +245,15 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
   min-height: 100vh;
 }
 
-jhi-main > .container-fluid:not(:has(jhi-login)):not(:has(jhi-register)):not(:has(jhi-password-reset-init)) {
+jhi-main > .container-fluid:not(:has(jhi-login)):not(:has(jhi-register)):not(:has(jhi-password-reset-init)):not(:has(jhi-library)) {
   margin-top: 64px;
   margin-left: 240px;
   padding: 24px;
   background: #f7f8fa;
   min-height: calc(100vh - 64px);
+  max-width: calc(100vw - 240px);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 jhi-main > .container-fluid:has(jhi-login),

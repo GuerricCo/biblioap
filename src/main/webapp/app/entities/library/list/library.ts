@@ -15,10 +15,12 @@ import { SortByDirective, SortDirective, SortService, type SortState, sortStateS
 import { LibraryDeleteDialog } from '../delete/library-delete-dialog';
 import { ILibrary } from '../library.model';
 import { LibraryService } from '../service/library.service';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 
 @Component({
   selector: 'jhi-library',
   templateUrl: './library.html',
+  styleUrl: './library.scss',
   imports: [
     RouterLink,
     FormsModule,
@@ -39,11 +41,11 @@ export class Library implements OnInit {
 
   readonly router = inject(Router);
   protected readonly libraryService = inject(LibraryService);
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   readonly isLoading = this.libraryService.librariesResource.isLoading;
   protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly sortService = inject(SortService);
   protected modalService = inject(NgbModal);
+  private readonly libraryContext = inject(LibraryContextService);
 
   constructor() {
     effect(() => {
@@ -65,13 +67,17 @@ export class Library implements OnInit {
   delete(library: ILibrary): void {
     const modalRef = this.modalService.open(LibraryDeleteDialog, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.library = library;
-    // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
         tap(() => this.load()),
       )
       .subscribe();
+  }
+
+  openLibrary(library: ILibrary): void {
+    this.libraryContext.setLibrary(library);
+    this.router.navigate(['/app', library.id, 'books']);
   }
 
   load(): void {
@@ -106,7 +112,6 @@ export class Library implements OnInit {
     const queryParamsObj = {
       sort: this.sortService.buildSortParam(sortState),
     };
-
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,
       queryParams: queryParamsObj,

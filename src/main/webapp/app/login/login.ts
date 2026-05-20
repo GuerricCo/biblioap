@@ -49,7 +49,7 @@ export default class Login implements OnInit, AfterViewInit {
         this.authenticationError.set(false);
         if (!this.router.currentNavigation()) {
           // There were no routing during login (eg from navigationToStoredUrl)
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/library']);
         }
       },
       error: () => this.authenticationError.set(true),
