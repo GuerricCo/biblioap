@@ -14,6 +14,7 @@ import com.bibli.domain.Library;
 import com.bibli.domain.Member;
 import com.bibli.domain.Review;
 import com.bibli.repository.ReviewRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.ReviewService;
 import com.bibli.service.dto.ReviewDTO;
 import com.bibli.service.mapper.ReviewMapper;
@@ -81,6 +82,9 @@ class ReviewResourceIT {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc restReviewMockMvc;
@@ -424,6 +428,7 @@ class ReviewResourceIT {
         } else {
             library = TestUtil.findAll(em, Library.class).get(0);
         }
+        library.setUser(userRepository.findAll().get(0));
         em.persist(library);
         em.flush();
         review.setLibrary(library);

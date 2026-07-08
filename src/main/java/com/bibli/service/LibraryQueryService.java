@@ -6,6 +6,7 @@ import com.bibli.repository.LibraryRepository;
 import com.bibli.service.criteria.LibraryCriteria;
 import com.bibli.service.dto.LibraryDTO;
 import com.bibli.service.mapper.LibraryMapper;
+import jakarta.persistence.criteria.JoinType;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +76,8 @@ public class LibraryQueryService extends QueryService<Library> {
                 buildStringSpecification(criteria.getAddress(), Library_.address),
                 buildStringSpecification(criteria.getCity(), Library_.city),
                 buildStringSpecification(criteria.getPhone(), Library_.phone),
-                buildStringSpecification(criteria.getEmail(), Library_.email)
+                buildStringSpecification(criteria.getEmail(), Library_.email),
+                buildSpecification(criteria.getUserId(), root -> root.join(Library_.user, JoinType.LEFT).get(User_.id))
             );
         }
         return specification;

@@ -14,6 +14,7 @@ import com.bibli.domain.Book;
 import com.bibli.domain.Category;
 import com.bibli.domain.Library;
 import com.bibli.repository.BookRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.BookService;
 import com.bibli.service.dto.BookDTO;
 import com.bibli.service.mapper.BookMapper;
@@ -102,6 +103,9 @@ class BookResourceIT {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc restBookMockMvc;
@@ -922,6 +926,7 @@ class BookResourceIT {
         } else {
             library = TestUtil.findAll(em, Library.class).get(0);
         }
+        library.setUser(userRepository.findAll().get(0));
         em.persist(library);
         em.flush();
         book.setLibrary(library);

@@ -15,6 +15,7 @@ import com.bibli.domain.Member;
 import com.bibli.domain.Reservation;
 import com.bibli.domain.enumeration.ReservationStatus;
 import com.bibli.repository.ReservationRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.ReservationService;
 import com.bibli.service.dto.ReservationDTO;
 import com.bibli.service.mapper.ReservationMapper;
@@ -79,6 +80,9 @@ class ReservationResourceIT {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc restReservationMockMvc;
@@ -388,6 +392,7 @@ class ReservationResourceIT {
         } else {
             library = TestUtil.findAll(em, Library.class).get(0);
         }
+        library.setUser(userRepository.findAll().get(0));
         em.persist(library);
         em.flush();
         reservation.setLibrary(library);

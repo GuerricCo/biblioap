@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Add an owning user to Library, so that a library is only visible to the user who created it.
+        Existing rows are test data and are cleared first (in FK dependency order) so the new
+        user_id column can be made mandatory.
+    -->
+    <changeSet id="20260708000000-1" author="jhipster">
+        <delete tableName="reservation"/>
+        <delete tableName="review"/>
+        <delete tableName="loan"/>
+        <delete tableName="rel_book__authors"/>
+        <delete tableName="book"/>
+        <delete tableName="member"/>
+        <delete tableName="library"/>
+    </changeSet>
+
+    <changeSet id="20260708000000-2" author="jhipster">
+        <addColumn tableName="library">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20260708000000-3" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="library"
+                                 constraintName="fk_library__user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+    </changeSet>
+</databaseChangeLog>

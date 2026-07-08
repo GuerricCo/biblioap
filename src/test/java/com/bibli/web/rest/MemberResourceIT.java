@@ -12,6 +12,7 @@ import com.bibli.IntegrationTest;
 import com.bibli.domain.Library;
 import com.bibli.domain.Member;
 import com.bibli.repository.MemberRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.MemberService;
 import com.bibli.service.dto.MemberDTO;
 import com.bibli.service.mapper.MemberMapper;
@@ -88,6 +89,9 @@ class MemberResourceIT {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc restMemberMockMvc;
@@ -645,6 +649,7 @@ class MemberResourceIT {
         } else {
             library = TestUtil.findAll(em, Library.class).get(0);
         }
+        library.setUser(userRepository.findAll().get(0));
         em.persist(library);
         em.flush();
         member.setLibrary(library);

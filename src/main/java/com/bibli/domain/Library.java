@@ -64,6 +64,10 @@ public class Library implements Serializable {
     @JsonIgnore
     private Set<Review> reviews = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @NotNull
+    private User user;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -162,6 +166,19 @@ public class Library implements Serializable {
 
     public Set<Review> getReviews() {
         return this.reviews;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Library user(User user) {
+        this.setUser(user);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

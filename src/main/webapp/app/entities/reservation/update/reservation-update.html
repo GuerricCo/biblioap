@@ -74,9 +74,14 @@
         <select class="form-control" id="field_book" data-cy="book" name="book" formControlName="book" [compareWith]="compareBook">
           <option [ngValue]="null">-- Sélectionner --</option>
           @for (bookOption of booksSharedCollection(); track $index) {
-            <option [ngValue]="bookOption">{{ bookOption.title }}</option>
+            <option [ngValue]="bookOption" [disabled]="!bookOption.availableCopies">
+              {{ bookOption.title }} ({{ bookOption.availableCopies ?? 0 }} disponible(s))
+            </option>
           }
         </select>
+        @if (isSelectedBookUnavailable()) {
+          <small class="form-error">Plus aucun exemplaire disponible pour ce livre.</small>
+        }
       </div>
 
       <div class="form-field">
@@ -107,7 +112,7 @@
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving()"
+          [disabled]="editForm.invalid || isSaving() || isSelectedBookUnavailable()"
           class="btn-save"
         >
           <fa-icon icon="save" />

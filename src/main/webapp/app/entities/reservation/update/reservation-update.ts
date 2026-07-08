@@ -48,6 +48,15 @@ export class ReservationUpdate implements OnInit {
   compareBook = (o1: IBook | null, o2: IBook | null): boolean => this.bookService.compareBook(o1, o2);
   compareMember = (o1: IMember | null, o2: IMember | null): boolean => this.memberService.compareMember(o1, o2);
 
+  isSelectedBookUnavailable(): boolean {
+    const selectedBook = this.editForm.controls.book.value;
+    if (!selectedBook) {
+      return false;
+    }
+    const book = this.booksSharedCollection().find(b => b.id === selectedBook.id);
+    return !book?.availableCopies;
+  }
+
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ reservation }) => {
       this.reservation = reservation;

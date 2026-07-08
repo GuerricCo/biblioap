@@ -1,6 +1,10 @@
 package com.bibli.web.rest;
 
+import com.bibli.domain.User;
 import com.bibli.repository.LibraryRepository;
+import com.bibli.repository.UserRepository;
+import com.bibli.security.AuthoritiesConstants;
+import com.bibli.security.SecurityUtils;
 import com.bibli.service.LibraryQueryService;
 import com.bibli.service.LibraryService;
 import com.bibli.service.criteria.LibraryCriteria;
@@ -41,10 +45,30 @@ public class LibraryResource {
 
     private final LibraryQueryService libraryQueryService;
 
-    public LibraryResource(LibraryService libraryService, LibraryRepository libraryRepository, LibraryQueryService libraryQueryService) {
+    private final UserRepository userRepository;
+
+    public LibraryResource(
+        LibraryService libraryService,
+        LibraryRepository libraryRepository,
+        LibraryQueryService libraryQueryService,
+        UserRepository userRepository
+    ) {
         this.libraryService = libraryService;
         this.libraryRepository = libraryRepository;
         this.libraryQueryService = libraryQueryService;
+        this.userRepository = userRepository;
+    }
+
+    /**
+     * Restricts the given criteria to the current user's own libraries, unless they are an admin.
+     */
+    private LibraryCriteria restrictToCurrentUser(LibraryCriteria criteria) {
+        LibraryCriteria restricted = criteria != null ? criteria : new LibraryCriteria();
+        if (!SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)) {
+            Long currentUserId = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin).map(User::getId).orElse(-1L);
+            restricted.userId().setEquals(currentUserId);
+        }
+        return restricted;
     }
 
     /**
@@ -145,7 +169,7 @@ public class LibraryResource {
     public ResponseEntity<List<LibraryDTO>> getAllLibraries(LibraryCriteria criteria) {
         LOG.debug("REST request to get Libraries by criteria: {}", criteria);
 
-        List<LibraryDTO> entityList = libraryQueryService.findByCriteria(criteria);
+        List<LibraryDTO> entityList = libraryQueryService.findByCriteria(restrictToCurrentUser(criteria));
         return ResponseEntity.ok().body(entityList);
     }
 
@@ -158,7 +182,7 @@ public class LibraryResource {
     @GetMapping("/count")
     public ResponseEntity<Long> countLibraries(LibraryCriteria criteria) {
         LOG.debug("REST request to count Libraries by criteria: {}", criteria);
-        return ResponseEntity.ok().body(libraryQueryService.countByCriteria(criteria));
+        return ResponseEntity.ok().body(libraryQueryService.countByCriteria(restrictToCurrentUser(criteria)));
     }
 
     /**

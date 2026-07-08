@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bibli.IntegrationTest;
 import com.bibli.domain.Library;
 import com.bibli.repository.LibraryRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.dto.LibraryDTO;
 import com.bibli.service.mapper.LibraryMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,6 +66,9 @@ class LibraryResourceIT {
     private LibraryMapper libraryMapper;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -97,6 +101,8 @@ class LibraryResourceIT {
     @BeforeEach
     void initTest() {
         library = createEntity();
+        // Owned by the "user" login, matching the default @WithMockUser principal for this test class.
+        userRepository.findOneByLogin("user").ifPresent(library::setUser);
     }
 
     @AfterEach

@@ -36,6 +36,8 @@ public class LibraryCriteria implements Serializable, Criteria {
 
     private StringFilter email;
 
+    private LongFilter userId;
+
     private Boolean distinct;
 
     public LibraryCriteria() {}
@@ -47,6 +49,7 @@ public class LibraryCriteria implements Serializable, Criteria {
         this.city = other.optionalCity().map(StringFilter::copy).orElse(null);
         this.phone = other.optionalPhone().map(StringFilter::copy).orElse(null);
         this.email = other.optionalEmail().map(StringFilter::copy).orElse(null);
+        this.userId = other.optionalUserId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -169,6 +172,25 @@ public class LibraryCriteria implements Serializable, Criteria {
         this.email = email;
     }
 
+    public LongFilter getUserId() {
+        return userId;
+    }
+
+    public Optional<LongFilter> optionalUserId() {
+        return Optional.ofNullable(userId);
+    }
+
+    public LongFilter userId() {
+        if (userId == null) {
+            setUserId(new LongFilter());
+        }
+        return userId;
+    }
+
+    public void setUserId(LongFilter userId) {
+        this.userId = userId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -204,13 +226,14 @@ public class LibraryCriteria implements Serializable, Criteria {
             Objects.equals(city, that.city) &&
             Objects.equals(phone, that.phone) &&
             Objects.equals(email, that.email) &&
+            Objects.equals(userId, that.userId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, city, phone, email, distinct);
+        return Objects.hash(id, name, address, city, phone, email, userId, distinct);
     }
 
     // prettier-ignore
@@ -223,6 +246,7 @@ public class LibraryCriteria implements Serializable, Criteria {
             optionalCity().map(f -> "city=" + f + ", ").orElse("") +
             optionalPhone().map(f -> "phone=" + f + ", ").orElse("") +
             optionalEmail().map(f -> "email=" + f + ", ").orElse("") +
+            optionalUserId().map(f -> "userId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

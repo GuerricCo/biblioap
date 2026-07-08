@@ -146,6 +146,7 @@
     "idnull": "Identifiant invalide",
     "idinvalid": "Identifiant invalide",
     "idnotfound": "Identifiant introuvable",
+    "noavailablecopies": "Plus aucun exemplaire disponible pour ce livre.",
     "file": {
       "could.not.extract": "Impossible d'extraire le fichier",
       "not.image": "Le fichier doit être une image et non du type \"{{ fileType }}\""

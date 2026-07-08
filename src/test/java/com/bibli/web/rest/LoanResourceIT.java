@@ -15,6 +15,7 @@ import com.bibli.domain.Loan;
 import com.bibli.domain.Member;
 import com.bibli.domain.enumeration.LoanStatus;
 import com.bibli.repository.LoanRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.LoanService;
 import com.bibli.service.dto.LoanDTO;
 import com.bibli.service.mapper.LoanMapper;
@@ -87,6 +88,9 @@ class LoanResourceIT {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc restLoanMockMvc;
@@ -545,6 +549,7 @@ class LoanResourceIT {
         } else {
             library = TestUtil.findAll(em, Library.class).get(0);
         }
+        library.setUser(userRepository.findAll().get(0));
         em.persist(library);
         em.flush();
         loan.setLibrary(library);

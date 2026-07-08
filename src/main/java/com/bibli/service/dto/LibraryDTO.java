@@ -23,6 +23,9 @@ public class LibraryDTO implements Serializable {
 
     private String email;
 
+    // Not @NotNull: the owner is assigned server-side from the authenticated user, never sent by the client.
+    private UserDTO user;
+
     public Long getId() {
         return id;
     }
@@ -71,6 +74,14 @@ public class LibraryDTO implements Serializable {
         this.email = email;
     }
 
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -102,6 +113,7 @@ public class LibraryDTO implements Serializable {
             ", city='" + getCity() + "'" +
             ", phone='" + getPhone() + "'" +
             ", email='" + getEmail() + "'" +
+            ", user=" + getUser() +
             "}";
     }
 }
