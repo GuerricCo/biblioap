@@ -22,7 +22,9 @@
           <dt><span jhiTranslate="bibliApp.reservation.status">Status</span></dt>
           <dd>
             <span [jhiTranslate]="'bibliApp.ReservationStatus.' + (reservationRef.status ?? 'null')">{{
-              { null: '', WAITING: 'WAITING', READY: 'READY', CANCELLED: 'CANCELLED' }[reservationRef.status ?? 'null']
+              { null: '', WAITING: 'WAITING', READY: 'READY', CANCELLED: 'CANCELLED', FULFILLED: 'FULFILLED' }[
+                reservationRef.status ?? 'null'
+              ]
             }}</span>
           </dd>
           <dt><span jhiTranslate="bibliApp.reservation.library">Library</span></dt>

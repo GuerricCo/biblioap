@@ -4,4 +4,6 @@ export enum ReservationStatus {
   READY = 'READY',
 
   CANCELLED = 'CANCELLED',
+
+  FULFILLED = 'FULFILLED',
 }

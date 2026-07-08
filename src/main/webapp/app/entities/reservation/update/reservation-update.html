@@ -51,21 +51,24 @@
         }
       </div>
 
-      @let statusRef = editForm.get('status')!;
-      <div class="form-field">
-        <label class="form-label" for="field_status" jhiTranslate="bibliApp.reservation.status">Statut</label>
-        <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
-          <option [ngValue]="null">{{ 'bibliApp.ReservationStatus.null' | translate }}</option>
-          @for (reservationStatus of reservationStatusValues; track $index) {
-            <option [value]="reservationStatus">{{ 'bibliApp.ReservationStatus.' + reservationStatus | translate }}</option>
-          }
-        </select>
-        @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
-          @if (statusRef.errors?.required) {
-            <small class="form-error" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
-          }
-        }
-      </div>
+      @if (editForm.controls.id.value === null) {
+        <div class="form-field">
+          <small class="form-hint"
+            >Le statut sera déterminé automatiquement : "Disponible" si un exemplaire est libre, sinon "En attente" (le membre sera prévenu
+            par email dès qu'un exemplaire se libère).</small
+          >
+        </div>
+      } @else {
+        <div class="form-field">
+          <label class="form-label" for="field_status" jhiTranslate="bibliApp.reservation.status">Statut</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null">{{ 'bibliApp.ReservationStatus.null' | translate }}</option>
+            @for (reservationStatus of reservationStatusValues; track $index) {
+              <option [value]="reservationStatus">{{ 'bibliApp.ReservationStatus.' + reservationStatus | translate }}</option>
+            }
+          </select>
+        </div>
+      }
 
       <div class="form-section-title">Relations</div>
 
@@ -74,13 +77,14 @@
         <select class="form-control" id="field_book" data-cy="book" name="book" formControlName="book" [compareWith]="compareBook">
           <option [ngValue]="null">-- Sélectionner --</option>
           @for (bookOption of booksSharedCollection(); track $index) {
-            <option [ngValue]="bookOption" [disabled]="!bookOption.availableCopies">
-              {{ bookOption.title }} ({{ bookOption.availableCopies ?? 0 }} disponible(s))
-            </option>
+            <option [ngValue]="bookOption">{{ bookOption.title }} ({{ bookOption.availableCopies ?? 0 }} disponible(s))</option>
           }
         </select>
         @if (isSelectedBookUnavailable()) {
-          <small class="form-error">Plus aucun exemplaire disponible pour ce livre.</small>
+          <small class="form-hint"
+            >Aucun exemplaire disponible : la réservation sera mise en attente et le membre sera prévenu par email dès qu'un exemplaire se
+            libère.</small
+          >
         }
       </div>
 
@@ -112,7 +116,7 @@
           type="submit"
           id="save-entity"
           data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving() || isSelectedBookUnavailable()"
+          [disabled]="editForm.invalid || isSaving()"
           class="btn-save"
         >
           <fa-icon icon="save" />

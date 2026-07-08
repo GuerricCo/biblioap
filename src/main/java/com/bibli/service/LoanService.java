@@ -34,10 +34,18 @@ public class LoanService {
 
     private final BookAvailabilityService bookAvailabilityService;
 
-    public LoanService(LoanRepository loanRepository, LoanMapper loanMapper, BookAvailabilityService bookAvailabilityService) {
+    private final ReservationQueueService reservationQueueService;
+
+    public LoanService(
+        LoanRepository loanRepository,
+        LoanMapper loanMapper,
+        BookAvailabilityService bookAvailabilityService,
+        ReservationQueueService reservationQueueService
+    ) {
         this.loanRepository = loanRepository;
         this.loanMapper = loanMapper;
         this.bookAvailabilityService = bookAvailabilityService;
+        this.reservationQueueService = reservationQueueService;
     }
 
     /**
@@ -130,8 +138,8 @@ public class LoanService {
     }
 
     /**
-     * Delete the loan by id. Releases the held copy back to the book's available stock, unless the
-     * loan was already returned (which already released it).
+     * Delete the loan by id. Releases the held copy back to the book's available stock (promoting
+     * the next waiting reservation for it, if any), unless the loan was already returned.
      *
      * @param id the id of the entity.
      */
@@ -142,14 +150,15 @@ public class LoanService {
             .ifPresent(loan -> {
                 Long bookId = loan.getBook() == null ? null : loan.getBook().getId();
                 if (holdsCopy(loan.getStatus(), bookId)) {
-                    bookAvailabilityService.releaseCopy(bookId, ENTITY_NAME);
+                    reservationQueueService.releaseCopyAndPromoteQueue(bookId, ENTITY_NAME);
                 }
                 loanRepository.deleteById(id);
             });
     }
 
     /**
-     * Marks a loan as returned today and releases its held copy back to the book's available stock.
+     * Marks a loan as returned today, releases its held copy back to the book's available stock and
+     * promotes the next waiting reservation for that book, if any.
      *
      * @param id the id of the loan to return.
      * @return the updated entity.
@@ -166,7 +175,7 @@ public class LoanService {
 
         Long bookId = loan.getBook() == null ? null : loan.getBook().getId();
         if (bookId != null) {
-            bookAvailabilityService.releaseCopy(bookId, ENTITY_NAME);
+            reservationQueueService.releaseCopyAndPromoteQueue(bookId, ENTITY_NAME);
         }
         loan.setStatus(LoanStatus.RETURNED);
         loan.setReturnDate(LocalDate.now());
@@ -192,7 +201,8 @@ public class LoanService {
 
         if (Objects.equals(oldBookId, newBookId)) {
             if (wasActive && !isNowActive) {
-                return bookAvailabilityService.releaseCopy(newBookId, ENTITY_NAME);
+                reservationQueueService.releaseCopyAndPromoteQueue(newBookId, ENTITY_NAME);
+                return bookAvailabilityService.findBook(newBookId, ENTITY_NAME);
             }
             if (!wasActive && isNowActive) {
                 return bookAvailabilityService.consumeCopy(newBookId, ENTITY_NAME);
@@ -201,7 +211,7 @@ public class LoanService {
         }
 
         if (wasActive) {
-            bookAvailabilityService.releaseCopy(oldBookId, ENTITY_NAME);
+            reservationQueueService.releaseCopyAndPromoteQueue(oldBookId, ENTITY_NAME);
         }
         if (isNowActive) {
             return bookAvailabilityService.consumeCopy(newBookId, ENTITY_NAME);

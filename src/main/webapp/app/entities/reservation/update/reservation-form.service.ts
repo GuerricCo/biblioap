@@ -45,9 +45,9 @@ export class ReservationFormService {
       reservationDate: new FormControl(reservationRawValue.reservationDate, {
         validators: [Validators.required],
       }),
-      status: new FormControl(reservationRawValue.status, {
-        validators: [Validators.required],
-      }),
+      // Not required: on creation the status is decided automatically by the backend depending on
+      // whether a copy is available (READY) or not (WAITING).
+      status: new FormControl(reservationRawValue.status),
       library: new FormControl(reservationRawValue.library),
       book: new FormControl(reservationRawValue.book),
       member: new FormControl(reservationRawValue.member),

@@ -185,23 +185,6 @@ class ReservationResourceIT {
 
     @Test
     @Transactional
-    void checkStatusIsRequired() throws Exception {
-        long databaseSizeBeforeTest = getRepositoryCount();
-        // set the field null
-        reservation.setStatus(null);
-
-        // Create the Reservation, which fails.
-        ReservationDTO reservationDTO = reservationMapper.toDto(reservation);
-
-        restReservationMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(reservationDTO)))
-            .andExpect(status().isBadRequest());
-
-        assertSameRepositoryCount(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllReservations() throws Exception {
         // Initialize the database
         insertedReservation = reservationRepository.saveAndFlush(reservation);

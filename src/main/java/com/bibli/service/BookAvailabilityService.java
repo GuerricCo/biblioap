@@ -23,6 +23,14 @@ public class BookAvailabilityService {
     }
 
     /**
+     * Whether the given book currently has at least one available copy.
+     */
+    public boolean hasAvailableCopy(Long bookId, String entityName) {
+        Book book = findBook(bookId, entityName);
+        return book.getAvailableCopies() != null && book.getAvailableCopies() > 0;
+    }
+
+    /**
      * Decrements the available copies of the given book, refusing when none is left.
      */
     public Book consumeCopy(Long bookId, String entityName) {

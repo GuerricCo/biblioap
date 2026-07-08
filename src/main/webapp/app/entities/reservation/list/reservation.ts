@@ -108,7 +108,7 @@ export class Reservation implements OnInit {
   }
 
   canConvertToLoan(reservation: IReservation): boolean {
-    return reservation.status === 'WAITING' || reservation.status === 'READY';
+    return reservation.status === 'READY';
   }
 
   convertToLoan(reservation: IReservation): void {

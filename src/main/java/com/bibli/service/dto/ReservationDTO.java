@@ -17,7 +17,7 @@ public class ReservationDTO implements Serializable {
     @NotNull
     private LocalDate reservationDate;
 
-    @NotNull
+    // Not @NotNull: on creation, the status is decided by the server based on book availability.
     private ReservationStatus status;
 
     private LibraryDTO library;

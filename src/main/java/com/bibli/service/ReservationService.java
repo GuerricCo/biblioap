@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link com.bibli.domain.Reservation}.
+ *
+ * <p>A reservation never blocks: if a copy is available it is consumed immediately and the
+ * reservation is {@link ReservationStatus#READY}; otherwise the reservation is queued as
+ * {@link ReservationStatus#WAITING} until a copy is released (loan return, cancellation...), at
+ * which point the oldest waiting reservation for that book is promoted and its member notified.
  */
 @Service
 @Transactional
@@ -41,6 +46,8 @@ public class ReservationService {
 
     private final BookAvailabilityService bookAvailabilityService;
 
+    private final ReservationQueueService reservationQueueService;
+
     private final LoanRepository loanRepository;
 
     private final LoanMapper loanMapper;
@@ -49,19 +56,22 @@ public class ReservationService {
         ReservationRepository reservationRepository,
         ReservationMapper reservationMapper,
         BookAvailabilityService bookAvailabilityService,
+        ReservationQueueService reservationQueueService,
         LoanRepository loanRepository,
         LoanMapper loanMapper
     ) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
         this.bookAvailabilityService = bookAvailabilityService;
+        this.reservationQueueService = reservationQueueService;
         this.loanRepository = loanRepository;
         this.loanMapper = loanMapper;
     }
 
     /**
-     * Save a reservation. Consumes one available copy of the reserved book, refusing the
-     * reservation outright if none is left.
+     * Save a reservation. Never refuses: consumes a copy and marks the reservation
+     * {@link ReservationStatus#READY} if one is available, otherwise queues it as
+     * {@link ReservationStatus#WAITING}.
      *
      * @param reservationDTO the entity to save.
      * @return the persisted entity.
@@ -70,8 +80,11 @@ public class ReservationService {
         LOG.debug("Request to save Reservation : {}", reservationDTO);
         Reservation reservation = reservationMapper.toEntity(reservationDTO);
         Long bookId = reservation.getBook() == null ? null : reservation.getBook().getId();
-        if (holdsCopy(reservation.getStatus(), bookId)) {
+        if (bookId != null && bookAvailabilityService.hasAvailableCopy(bookId, ENTITY_NAME)) {
             reservation.setBook(bookAvailabilityService.consumeCopy(bookId, ENTITY_NAME));
+            reservation.setStatus(ReservationStatus.READY);
+        } else {
+            reservation.setStatus(ReservationStatus.WAITING);
         }
         reservation = reservationRepository.save(reservation);
         return reservationMapper.toDto(reservation);
@@ -79,7 +92,8 @@ public class ReservationService {
 
     /**
      * Update a reservation. Releases or consumes a copy of the book when the status transitions
-     * to/from an active state (WAITING/READY), so the available copies count stays accurate.
+     * to/from {@link ReservationStatus#READY}, so the available copies count stays accurate; a
+     * release also promotes the next waiting reservation for that book, if any.
      *
      * @param reservationDTO the entity to save.
      * @return the persisted entity.
@@ -149,8 +163,8 @@ public class ReservationService {
     }
 
     /**
-     * Delete the reservation by id. Releases the held copy back to the book's available stock,
-     * unless the reservation was no longer active (cancelled or already fulfilled).
+     * Delete the reservation by id. If it held a copy (READY), releases it back to stock and
+     * promotes the next waiting reservation for that book, if any.
      *
      * @param id the id of the entity.
      */
@@ -161,16 +175,16 @@ public class ReservationService {
             .ifPresent(reservation -> {
                 Long bookId = reservation.getBook() == null ? null : reservation.getBook().getId();
                 if (holdsCopy(reservation.getStatus(), bookId)) {
-                    bookAvailabilityService.releaseCopy(bookId, ENTITY_NAME);
+                    reservationQueueService.releaseCopyAndPromoteQueue(bookId, ENTITY_NAME);
                 }
                 reservationRepository.deleteById(id);
             });
     }
 
     /**
-     * Converts an active reservation into a loan: the copy already held by the reservation is
-     * transferred to the new loan without touching the available copies count, and the reservation
-     * is marked {@link ReservationStatus#FULFILLED}.
+     * Converts a {@link ReservationStatus#READY} reservation into a loan: the copy already held by
+     * the reservation is transferred to the new loan without touching the available copies count,
+     * and the reservation is marked {@link ReservationStatus#FULFILLED}.
      *
      * @param id the id of the reservation to convert.
      * @return the newly created loan.
@@ -181,8 +195,12 @@ public class ReservationService {
             .findById(id)
             .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
 
-        if (reservation.getStatus() != ReservationStatus.WAITING && reservation.getStatus() != ReservationStatus.READY) {
-            throw new BadRequestAlertException("Only an active reservation can be converted to a loan", ENTITY_NAME, "notactive");
+        if (reservation.getStatus() != ReservationStatus.READY) {
+            throw new BadRequestAlertException(
+                "Only a reservation with a copy held (READY) can be converted to a loan",
+                ENTITY_NAME,
+                "notactive"
+            );
         }
 
         LocalDate borrowDate = LocalDate.now();
@@ -202,35 +220,37 @@ public class ReservationService {
     }
 
     /**
-     * A reservation holds a copy of a book for as long as it references one and is waiting or ready.
+     * Only a {@link ReservationStatus#READY} reservation actually holds a copy of its book; a
+     * {@link ReservationStatus#WAITING} one is merely queued.
      */
     private static boolean holdsCopy(ReservationStatus status, Long bookId) {
-        return bookId != null && (status == ReservationStatus.WAITING || status == ReservationStatus.READY);
+        return bookId != null && status == ReservationStatus.READY;
     }
 
     /**
      * Adjusts the available copies count for a status/book transition: releases the hold on the
-     * previous book if it was active and is no longer, consumes a copy of the new book if it is now
-     * active and wasn't before.
+     * previous book if it was held and is no longer (promoting the next waiting reservation for it),
+     * consumes a copy of the new book if it is now held and wasn't before.
      */
     private Book reconcileAvailability(ReservationStatus oldStatus, Long oldBookId, ReservationStatus newStatus, Long newBookId) {
-        boolean wasActive = holdsCopy(oldStatus, oldBookId);
-        boolean isNowActive = holdsCopy(newStatus, newBookId);
+        boolean wasHeld = holdsCopy(oldStatus, oldBookId);
+        boolean isNowHeld = holdsCopy(newStatus, newBookId);
 
         if (Objects.equals(oldBookId, newBookId)) {
-            if (wasActive && !isNowActive) {
-                return bookAvailabilityService.releaseCopy(newBookId, ENTITY_NAME);
+            if (wasHeld && !isNowHeld) {
+                reservationQueueService.releaseCopyAndPromoteQueue(newBookId, ENTITY_NAME);
+                return bookAvailabilityService.findBook(newBookId, ENTITY_NAME);
             }
-            if (!wasActive && isNowActive) {
+            if (!wasHeld && isNowHeld) {
                 return bookAvailabilityService.consumeCopy(newBookId, ENTITY_NAME);
             }
             return newBookId == null ? null : bookAvailabilityService.findBook(newBookId, ENTITY_NAME);
         }
 
-        if (wasActive) {
-            bookAvailabilityService.releaseCopy(oldBookId, ENTITY_NAME);
+        if (wasHeld) {
+            reservationQueueService.releaseCopyAndPromoteQueue(oldBookId, ENTITY_NAME);
         }
-        if (isNowActive) {
+        if (isNowHeld) {
             return bookAvailabilityService.consumeCopy(newBookId, ENTITY_NAME);
         }
         return newBookId == null ? null : bookAvailabilityService.findBook(newBookId, ENTITY_NAME);

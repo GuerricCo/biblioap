@@ -1,6 +1,7 @@
 package com.bibli.repository;
 
 import com.bibli.domain.Reservation;
+import com.bibli.domain.enumeration.ReservationStatus;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, JpaSpecificationExecutor<Reservation> {
+    /**
+     * The oldest still-waiting reservation for a book, i.e. the next in line to be notified when a
+     * copy becomes available again.
+     */
+    Optional<Reservation> findFirstByBook_IdAndStatusOrderByReservationDateAscIdAsc(Long bookId, ReservationStatus status);
+
     default Optional<Reservation> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }
