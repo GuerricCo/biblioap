@@ -17,9 +17,11 @@ import org.springframework.stereotype.Repository;
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, JpaSpecificationExecutor<Reservation> {
     /**
      * The oldest still-waiting reservation for a book, i.e. the next in line to be notified when a
-     * copy becomes available again.
+     * copy becomes available again. Ordered by id (insertion order) rather than reservationDate,
+     * since the latter is a free-text field the librarian can set to any date and is therefore not a
+     * reliable proxy for when the reservation was actually made.
      */
-    Optional<Reservation> findFirstByBook_IdAndStatusOrderByReservationDateAscIdAsc(Long bookId, ReservationStatus status);
+    Optional<Reservation> findFirstByBook_IdAndStatusOrderByIdAsc(Long bookId, ReservationStatus status);
 
     default Optional<Reservation> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);

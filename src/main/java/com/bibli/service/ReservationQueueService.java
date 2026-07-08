@@ -49,7 +49,7 @@ public class ReservationQueueService {
 
     private void promoteNextWaiting(Long bookId) {
         reservationRepository
-            .findFirstByBook_IdAndStatusOrderByReservationDateAscIdAsc(bookId, ReservationStatus.WAITING)
+            .findFirstByBook_IdAndStatusOrderByIdAsc(bookId, ReservationStatus.WAITING)
             .ifPresent(next -> {
                 bookAvailabilityService.consumeCopy(bookId, ENTITY_NAME);
                 next.setStatus(ReservationStatus.READY);
