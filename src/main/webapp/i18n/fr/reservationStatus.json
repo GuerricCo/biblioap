@@ -2,9 +2,9 @@
   "bibliApp": {
     "ReservationStatus": {
       "null": "",
-      "WAITING": "WAITING",
-      "READY": "READY",
-      "CANCELLED": "CANCELLED"
+      "WAITING": "En attente",
+      "READY": "Disponible",
+      "CANCELLED": "Annulée"
     }
   }
 }
