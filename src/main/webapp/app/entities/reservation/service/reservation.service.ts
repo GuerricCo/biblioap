@@ -8,6 +8,7 @@ import { DATE_FORMAT } from 'app/config/input.constants';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { isPresent } from 'app/core/util/operators';
+import { ILoan } from 'app/entities/loan/loan.model';
 import { IReservation, NewReservation } from '../reservation.model';
 
 export type PartialUpdateReservation = Partial<IReservation> & Pick<IReservation, 'id'>;
@@ -90,6 +91,21 @@ export class ReservationService extends ReservationsService {
 
   delete(id: number): Observable<undefined> {
     return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
+  }
+
+  convertToLoan(id: number): Observable<ILoan> {
+    return this.http
+      .post<ILoan>(`${this.resourceUrl}/${encodeURIComponent(id)}/convert-to-loan`, {})
+      .pipe(map(res => this.convertLoanFromServer(res)));
+  }
+
+  private convertLoanFromServer(restLoan: ILoan): ILoan {
+    return {
+      ...restLoan,
+      borrowDate: restLoan.borrowDate ? dayjs(restLoan.borrowDate) : undefined,
+      dueDate: restLoan.dueDate ? dayjs(restLoan.dueDate) : undefined,
+      returnDate: restLoan.returnDate ? dayjs(restLoan.returnDate) : undefined,
+    };
   }
 
   getReservationIdentifier(reservation: Pick<IReservation, 'id'>): number {

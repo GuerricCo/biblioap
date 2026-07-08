@@ -141,6 +141,19 @@ public class LoanResource {
     }
 
     /**
+     * {@code POST  /loans/:id/return} : marks a loan as returned and releases its copy back to stock.
+     *
+     * @param id the id of the loan to return.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated loanDTO.
+     */
+    @PostMapping("/{id}/return")
+    public ResponseEntity<LoanDTO> returnLoan(@PathVariable("id") Long id) {
+        LOG.debug("REST request to return Loan : {}", id);
+        LoanDTO loanDTO = loanService.returnLoan(id);
+        return ResponseEntity.ok().body(loanDTO);
+    }
+
+    /**
      * {@code GET  /loans} : get all the Loans.
      *
      * @param pageable the pagination information.

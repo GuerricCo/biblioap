@@ -4,6 +4,7 @@ import com.bibli.repository.ReservationRepository;
 import com.bibli.service.ReservationQueryService;
 import com.bibli.service.ReservationService;
 import com.bibli.service.criteria.ReservationCriteria;
+import com.bibli.service.dto.LoanDTO;
 import com.bibli.service.dto.ReservationDTO;
 import com.bibli.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -142,6 +143,20 @@ public class ReservationResource {
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, reservationDTO.getId().toString())
         );
+    }
+
+    /**
+     * {@code POST  /reservations/:id/convert-to-loan} : converts an active reservation into a loan.
+     *
+     * @param id the id of the reservation to convert.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new loanDTO.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/{id}/convert-to-loan")
+    public ResponseEntity<LoanDTO> convertReservationToLoan(@PathVariable("id") Long id) throws URISyntaxException {
+        LOG.debug("REST request to convert Reservation {} to a Loan", id);
+        LoanDTO loanDTO = reservationService.convertToLoan(id);
+        return ResponseEntity.created(new URI("/api/loans/" + loanDTO.getId())).body(loanDTO);
     }
 
     /**

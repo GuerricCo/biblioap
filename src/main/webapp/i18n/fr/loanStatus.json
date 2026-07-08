@@ -2,9 +2,9 @@
   "bibliApp": {
     "LoanStatus": {
       "null": "",
-      "BORROWED": "BORROWED",
-      "RETURNED": "RETURNED",
-      "LATE": "LATE"
+      "BORROWED": "Emprunté",
+      "RETURNED": "Rendu",
+      "LATE": "En retard"
     }
   }
 }

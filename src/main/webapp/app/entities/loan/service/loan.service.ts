@@ -92,6 +92,12 @@ export class LoanService extends LoansService {
     return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
+  returnLoan(id: number): Observable<ILoan> {
+    return this.http
+      .post<RestLoan>(`${this.resourceUrl}/${encodeURIComponent(id)}/return`, {})
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
   getLoanIdentifier(loan: Pick<ILoan, 'id'>): number {
     return loan.id;
   }

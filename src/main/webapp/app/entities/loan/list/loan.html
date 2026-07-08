@@ -107,6 +107,17 @@
                 </td>
                 <td class="td-actions">
                   <div class="action-group">
+                    @if (canReturn(loan)) {
+                      <button
+                        type="button"
+                        (click)="returnLoan(loan)"
+                        class="btn-action btn-action--return"
+                        data-cy="entityReturnButton"
+                        title="Marquer comme rendu"
+                      >
+                        <fa-icon icon="check" />
+                      </button>
+                    }
                     <a
                       [routerLink]="['/loan', loan.id, 'view']"
                       class="btn-action btn-action--view"

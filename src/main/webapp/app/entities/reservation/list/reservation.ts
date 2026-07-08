@@ -107,6 +107,17 @@ export class Reservation implements OnInit {
       .subscribe();
   }
 
+  canConvertToLoan(reservation: IReservation): boolean {
+    return reservation.status === 'WAITING' || reservation.status === 'READY';
+  }
+
+  convertToLoan(reservation: IReservation): void {
+    this.reservationService.convertToLoan(reservation.id).subscribe(loan => {
+      this.load();
+      this.router.navigate(['/loan', loan.id, 'edit']);
+    });
+  }
+
   load(): void {
     this.queryBackend();
   }

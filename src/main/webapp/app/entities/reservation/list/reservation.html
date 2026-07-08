@@ -85,6 +85,17 @@
                 </td>
                 <td class="td-actions">
                   <div class="action-group">
+                    @if (canConvertToLoan(reservation)) {
+                      <button
+                        type="button"
+                        (click)="convertToLoan(reservation)"
+                        class="btn-action btn-action--convert"
+                        data-cy="entityConvertToLoanButton"
+                        title="Convertir en prêt"
+                      >
+                        <fa-icon icon="hand-holding" />
+                      </button>
+                    }
                     <a
                       [routerLink]="['/reservation', reservation.id, 'view']"
                       class="btn-action btn-action--view"

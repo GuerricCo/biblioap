@@ -4,7 +4,8 @@
       "null": "",
       "WAITING": "WAITING",
       "READY": "READY",
-      "CANCELLED": "CANCELLED"
+      "CANCELLED": "CANCELLED",
+      "FULFILLED": "FULFILLED"
     }
   }
 }

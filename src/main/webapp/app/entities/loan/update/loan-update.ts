@@ -70,6 +70,13 @@ export class LoanUpdate implements OnInit {
   save(): void {
     this.isSaving.set(true);
     const loan = this.loanFormService.getLoan(this.editForm);
+    // The library isn't shown in the form: fall back to the selected book/member's own library if
+    // the navigation context didn't provide one, so the loan doesn't silently end up without a
+    // library and disappear from the library-scoped list.
+    if (!loan.library) {
+      loan.library =
+        (loan.book as IBook | null)?.library ?? (loan.member as IMember | null)?.library ?? this.libraryContext.currentLibrary();
+    }
     if (loan.id === null) {
       this.subscribeToSaveResponse(this.loanService.create(loan));
     } else {

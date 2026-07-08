@@ -1,13 +1,18 @@
 package com.bibli.service;
 
 import com.bibli.domain.Book;
+import com.bibli.domain.Loan;
 import com.bibli.domain.Reservation;
+import com.bibli.domain.enumeration.LoanStatus;
 import com.bibli.domain.enumeration.ReservationStatus;
-import com.bibli.repository.BookRepository;
+import com.bibli.repository.LoanRepository;
 import com.bibli.repository.ReservationRepository;
+import com.bibli.service.dto.LoanDTO;
 import com.bibli.service.dto.ReservationDTO;
+import com.bibli.service.mapper.LoanMapper;
 import com.bibli.service.mapper.ReservationMapper;
 import com.bibli.web.rest.errors.BadRequestAlertException;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -24,22 +29,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ReservationService {
 
+    private static final String ENTITY_NAME = "reservation";
+
+    private static final int DEFAULT_LOAN_DURATION_DAYS = 14;
+
     private static final Logger LOG = LoggerFactory.getLogger(ReservationService.class);
 
     private final ReservationRepository reservationRepository;
 
     private final ReservationMapper reservationMapper;
 
-    private final BookRepository bookRepository;
+    private final BookAvailabilityService bookAvailabilityService;
+
+    private final LoanRepository loanRepository;
+
+    private final LoanMapper loanMapper;
 
     public ReservationService(
         ReservationRepository reservationRepository,
         ReservationMapper reservationMapper,
-        BookRepository bookRepository
+        BookAvailabilityService bookAvailabilityService,
+        LoanRepository loanRepository,
+        LoanMapper loanMapper
     ) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
-        this.bookRepository = bookRepository;
+        this.bookAvailabilityService = bookAvailabilityService;
+        this.loanRepository = loanRepository;
+        this.loanMapper = loanMapper;
     }
 
     /**
@@ -52,8 +69,9 @@ public class ReservationService {
     public ReservationDTO save(ReservationDTO reservationDTO) {
         LOG.debug("Request to save Reservation : {}", reservationDTO);
         Reservation reservation = reservationMapper.toEntity(reservationDTO);
-        if (holdsCopy(reservation.getStatus(), reservation.getBook() == null ? null : reservation.getBook().getId())) {
-            reservation.setBook(consumeCopy(reservation.getBook().getId()));
+        Long bookId = reservation.getBook() == null ? null : reservation.getBook().getId();
+        if (holdsCopy(reservation.getStatus(), bookId)) {
+            reservation.setBook(bookAvailabilityService.consumeCopy(bookId, ENTITY_NAME));
         }
         reservation = reservationRepository.save(reservation);
         return reservationMapper.toDto(reservation);
@@ -61,7 +79,7 @@ public class ReservationService {
 
     /**
      * Update a reservation. Releases or consumes a copy of the book when the status transitions
-     * to/from {@link ReservationStatus#CANCELLED}, so the available copies count stays accurate.
+     * to/from an active state (WAITING/READY), so the available copies count stays accurate.
      *
      * @param reservationDTO the entity to save.
      * @return the persisted entity.
@@ -70,7 +88,7 @@ public class ReservationService {
         LOG.debug("Request to update Reservation : {}", reservationDTO);
         Reservation existing = reservationRepository
             .findById(reservationDTO.getId())
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "reservation", "idnotfound"));
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
 
         Reservation reservation = reservationMapper.toEntity(reservationDTO);
         Long oldBookId = existing.getBook() == null ? null : existing.getBook().getId();
@@ -132,7 +150,7 @@ public class ReservationService {
 
     /**
      * Delete the reservation by id. Releases the held copy back to the book's available stock,
-     * unless the reservation was already cancelled (which already released it).
+     * unless the reservation was no longer active (cancelled or already fulfilled).
      *
      * @param id the id of the entity.
      */
@@ -143,44 +161,51 @@ public class ReservationService {
             .ifPresent(reservation -> {
                 Long bookId = reservation.getBook() == null ? null : reservation.getBook().getId();
                 if (holdsCopy(reservation.getStatus(), bookId)) {
-                    releaseCopy(bookId);
+                    bookAvailabilityService.releaseCopy(bookId, ENTITY_NAME);
                 }
                 reservationRepository.deleteById(id);
             });
     }
 
     /**
-     * A reservation holds a copy of a book for as long as it references one and is not cancelled.
+     * Converts an active reservation into a loan: the copy already held by the reservation is
+     * transferred to the new loan without touching the available copies count, and the reservation
+     * is marked {@link ReservationStatus#FULFILLED}.
+     *
+     * @param id the id of the reservation to convert.
+     * @return the newly created loan.
+     */
+    public LoanDTO convertToLoan(Long id) {
+        LOG.debug("Request to convert Reservation to Loan : {}", id);
+        Reservation reservation = reservationRepository
+            .findById(id)
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+
+        if (reservation.getStatus() != ReservationStatus.WAITING && reservation.getStatus() != ReservationStatus.READY) {
+            throw new BadRequestAlertException("Only an active reservation can be converted to a loan", ENTITY_NAME, "notactive");
+        }
+
+        LocalDate borrowDate = LocalDate.now();
+        Loan loan = new Loan()
+            .library(reservation.getLibrary())
+            .book(reservation.getBook())
+            .member(reservation.getMember())
+            .borrowDate(borrowDate)
+            .dueDate(borrowDate.plusDays(DEFAULT_LOAN_DURATION_DAYS))
+            .status(LoanStatus.BORROWED);
+        loan = loanRepository.save(loan);
+
+        reservation.setStatus(ReservationStatus.FULFILLED);
+        reservationRepository.save(reservation);
+
+        return loanMapper.toDto(loan);
+    }
+
+    /**
+     * A reservation holds a copy of a book for as long as it references one and is waiting or ready.
      */
     private static boolean holdsCopy(ReservationStatus status, Long bookId) {
-        return bookId != null && status != ReservationStatus.CANCELLED;
-    }
-
-    /**
-     * Decrements the available copies of the given book, refusing when none is left.
-     */
-    private Book consumeCopy(Long bookId) {
-        Book book = findBook(bookId);
-        if (book.getAvailableCopies() == null || book.getAvailableCopies() <= 0) {
-            throw new BadRequestAlertException("No available copies for this book", "reservation", "noavailablecopies");
-        }
-        book.setAvailableCopies(book.getAvailableCopies() - 1);
-        return bookRepository.save(book);
-    }
-
-    /**
-     * Increments the available copies of the given book.
-     */
-    private Book releaseCopy(Long bookId) {
-        Book book = findBook(bookId);
-        book.setAvailableCopies((book.getAvailableCopies() == null ? 0 : book.getAvailableCopies()) + 1);
-        return bookRepository.save(book);
-    }
-
-    private Book findBook(Long bookId) {
-        return bookRepository
-            .findById(bookId)
-            .orElseThrow(() -> new BadRequestAlertException("Book not found", "reservation", "idnotfound"));
+        return bookId != null && (status == ReservationStatus.WAITING || status == ReservationStatus.READY);
     }
 
     /**
@@ -194,20 +219,20 @@ public class ReservationService {
 
         if (Objects.equals(oldBookId, newBookId)) {
             if (wasActive && !isNowActive) {
-                return releaseCopy(newBookId);
+                return bookAvailabilityService.releaseCopy(newBookId, ENTITY_NAME);
             }
             if (!wasActive && isNowActive) {
-                return consumeCopy(newBookId);
+                return bookAvailabilityService.consumeCopy(newBookId, ENTITY_NAME);
             }
-            return newBookId == null ? null : findBook(newBookId);
+            return newBookId == null ? null : bookAvailabilityService.findBook(newBookId, ENTITY_NAME);
         }
 
         if (wasActive) {
-            releaseCopy(oldBookId);
+            bookAvailabilityService.releaseCopy(oldBookId, ENTITY_NAME);
         }
         if (isNowActive) {
-            return consumeCopy(newBookId);
+            return bookAvailabilityService.consumeCopy(newBookId, ENTITY_NAME);
         }
-        return newBookId == null ? null : findBook(newBookId);
+        return newBookId == null ? null : bookAvailabilityService.findBook(newBookId, ENTITY_NAME);
     }
 }

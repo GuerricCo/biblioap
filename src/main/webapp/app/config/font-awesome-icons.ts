@@ -47,6 +47,7 @@ import {
   faClock,
   faBookmark,
   faTags,
+  faHandHolding,
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -99,5 +100,6 @@ export const fontAwesomeIcons = [
   faClock,
   faBookmark,
   faTags,
+  faHandHolding,
   // jhipster-needle-add-icon-import
 ];

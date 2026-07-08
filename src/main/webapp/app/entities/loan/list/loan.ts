@@ -107,6 +107,14 @@ export class Loan implements OnInit {
       .subscribe();
   }
 
+  canReturn(loan: ILoan): boolean {
+    return loan.status !== 'RETURNED';
+  }
+
+  returnLoan(loan: ILoan): void {
+    this.loanService.returnLoan(loan.id).subscribe(() => this.load());
+  }
+
   load(): void {
     this.queryBackend();
   }

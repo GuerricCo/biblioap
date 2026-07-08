@@ -809,6 +809,15 @@ jhi-main > .container-fluid:has(jhi-register) {
       border-color: #dc2626;
     }
   }
+
+  &--convert,
+  &--return {
+    color: #16a34a;
+    &:hover {
+      background: #dcfce7;
+      border-color: #16a34a;
+    }
+  }
 }
 
 /* Pagination */

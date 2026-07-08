@@ -7,4 +7,5 @@ public enum ReservationStatus {
     WAITING,
     READY,
     CANCELLED,
+    FULFILLED,
 }

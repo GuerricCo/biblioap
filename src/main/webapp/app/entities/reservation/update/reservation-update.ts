@@ -81,6 +81,15 @@ export class ReservationUpdate implements OnInit {
   save(): void {
     this.isSaving.set(true);
     const reservation = this.reservationFormService.getReservation(this.editForm);
+    // The library isn't shown in the form: fall back to the selected book/member's own library if
+    // the navigation context didn't provide one, so the reservation doesn't silently end up without
+    // a library and disappear from the library-scoped list.
+    if (!reservation.library) {
+      reservation.library =
+        (reservation.book as IBook | null)?.library ??
+        (reservation.member as IMember | null)?.library ??
+        this.libraryContext.currentLibrary();
+    }
     if (reservation.id === null) {
       this.subscribeToSaveResponse(this.reservationService.create(reservation));
     } else {

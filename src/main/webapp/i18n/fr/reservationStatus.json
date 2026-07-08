@@ -4,7 +4,8 @@
       "null": "",
       "WAITING": "En attente",
       "READY": "Disponible",
-      "CANCELLED": "Annulée"
+      "CANCELLED": "Annulée",
+      "FULFILLED": "Transformée en prêt"
     }
   }
 }
