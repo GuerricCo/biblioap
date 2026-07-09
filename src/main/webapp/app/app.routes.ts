@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import libraryContextResolve from 'app/core/library-context/library-context.resolve';
 import { Authority } from 'app/shared/jhipster/constants';
 import { errorRoute } from './layouts/error/error.route';
 
@@ -49,6 +50,7 @@ const routes: Routes = [
   {
     path: 'app/:libraryId',
     canActivate: [UserRouteAccessService],
+    resolve: { library: libraryContextResolve },
     children: [
       {
         path: 'books',
