@@ -2,7 +2,6 @@ package com.bibli.service;
 
 import com.bibli.domain.Book;
 import com.bibli.repository.BookRepository;
-import com.bibli.web.rest.errors.BadRequestAlertException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,7 +18,7 @@ public class BookAvailabilityService {
     }
 
     public Book findBook(Long bookId, String entityName) {
-        return bookRepository.findById(bookId).orElseThrow(() -> new BadRequestAlertException("Book not found", entityName, "idnotfound"));
+        return bookRepository.findById(bookId).orElseThrow(() -> new BusinessException("Book not found", entityName, "idnotfound"));
     }
 
     /**
@@ -36,7 +35,7 @@ public class BookAvailabilityService {
     public Book consumeCopy(Long bookId, String entityName) {
         Book book = findBook(bookId, entityName);
         if (book.getAvailableCopies() == null || book.getAvailableCopies() <= 0) {
-            throw new BadRequestAlertException("No available copies for this book", entityName, "noavailablecopies");
+            throw new BusinessException("No available copies for this book", entityName, "noavailablecopies");
         }
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         return bookRepository.save(book);

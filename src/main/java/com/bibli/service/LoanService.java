@@ -6,7 +6,6 @@ import com.bibli.domain.enumeration.LoanStatus;
 import com.bibli.repository.LoanRepository;
 import com.bibli.service.dto.LoanDTO;
 import com.bibli.service.mapper.LoanMapper;
-import com.bibli.web.rest.errors.BadRequestAlertException;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,7 +76,7 @@ public class LoanService {
         LOG.debug("Request to update Loan : {}", loanDTO);
         Loan existing = loanRepository
             .findById(loanDTO.getId())
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+            .orElseThrow(() -> new BusinessException("Entity not found", ENTITY_NAME, "idnotfound"));
 
         Loan loan = loanMapper.toEntity(loanDTO);
         Long oldBookId = existing.getBook() == null ? null : existing.getBook().getId();
@@ -165,12 +164,10 @@ public class LoanService {
      */
     public LoanDTO returnLoan(Long id) {
         LOG.debug("Request to return Loan : {}", id);
-        Loan loan = loanRepository
-            .findById(id)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+        Loan loan = loanRepository.findById(id).orElseThrow(() -> new BusinessException("Entity not found", ENTITY_NAME, "idnotfound"));
 
         if (loan.getStatus() == LoanStatus.RETURNED) {
-            throw new BadRequestAlertException("This loan has already been returned", ENTITY_NAME, "alreadyreturned");
+            throw new BusinessException("This loan has already been returned", ENTITY_NAME, "alreadyreturned");
         }
 
         Long bookId = loan.getBook() == null ? null : loan.getBook().getId();

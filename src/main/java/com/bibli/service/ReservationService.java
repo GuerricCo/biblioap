@@ -11,7 +11,6 @@ import com.bibli.service.dto.LoanDTO;
 import com.bibli.service.dto.ReservationDTO;
 import com.bibli.service.mapper.LoanMapper;
 import com.bibli.service.mapper.ReservationMapper;
-import com.bibli.web.rest.errors.BadRequestAlertException;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
@@ -102,7 +101,7 @@ public class ReservationService {
         LOG.debug("Request to update Reservation : {}", reservationDTO);
         Reservation existing = reservationRepository
             .findById(reservationDTO.getId())
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+            .orElseThrow(() -> new BusinessException("Entity not found", ENTITY_NAME, "idnotfound"));
 
         Reservation reservation = reservationMapper.toEntity(reservationDTO);
         Long oldBookId = existing.getBook() == null ? null : existing.getBook().getId();
@@ -193,14 +192,10 @@ public class ReservationService {
         LOG.debug("Request to convert Reservation to Loan : {}", id);
         Reservation reservation = reservationRepository
             .findById(id)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound"));
+            .orElseThrow(() -> new BusinessException("Entity not found", ENTITY_NAME, "idnotfound"));
 
         if (reservation.getStatus() != ReservationStatus.READY) {
-            throw new BadRequestAlertException(
-                "Only a reservation with a copy held (READY) can be converted to a loan",
-                ENTITY_NAME,
-                "notactive"
-            );
+            throw new BusinessException("Only a reservation with a copy held (READY) can be converted to a loan", ENTITY_NAME, "notactive");
         }
 
         LocalDate borrowDate = LocalDate.now();

@@ -7,7 +7,6 @@ import com.bibli.security.AuthoritiesConstants;
 import com.bibli.security.SecurityUtils;
 import com.bibli.service.dto.LibraryDTO;
 import com.bibli.service.mapper.LibraryMapper;
-import com.bibli.web.rest.errors.BadRequestAlertException;
 import java.util.Optional;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -62,7 +61,7 @@ public class LibraryService {
         Library existing = libraryRepository
             .findById(libraryDTO.getId())
             .filter(this::canAccess)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "library", "idnotfound"));
+            .orElseThrow(() -> new BusinessException("Entity not found", "library", "idnotfound"));
 
         Library library = libraryMapper.toEntity(libraryDTO);
         library.setUser(existing.getUser());
@@ -114,7 +113,7 @@ public class LibraryService {
         Library library = libraryRepository
             .findById(id)
             .filter(this::canAccess)
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "library", "idnotfound"));
+            .orElseThrow(() -> new BusinessException("Entity not found", "library", "idnotfound"));
 
         Hibernate.initialize(library.getReviews());
         library.getReviews().clear();

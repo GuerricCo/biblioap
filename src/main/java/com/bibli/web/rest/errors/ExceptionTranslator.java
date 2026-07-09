@@ -98,6 +98,11 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
         if (
             ex instanceof com.bibli.service.InvalidPasswordException
         ) return (ProblemDetailWithCause) new InvalidPasswordException().getBody();
+        if (ex instanceof com.bibli.service.BusinessException be) return (ProblemDetailWithCause) new BadRequestAlertException(
+            be.getMessage(),
+            be.getEntityName(),
+            be.getErrorKey()
+        ).getBody();
 
         if (
             ex instanceof ErrorResponseException exp && exp.getBody() instanceof ProblemDetailWithCause problemDetailWithCause
