@@ -102,6 +102,7 @@ jhipster:
         token-validity-in-seconds-for-remember-me: 2592000
         base64-secret: '4neheai05chKfjZezM0QDE/KtUKSX5IIR6N0N9Qf1+0q9LT9kic3mdpvlvVV5uafF1d0H25D/vYT7sq8v5R3wg=='
   mail: # specific JHipster mail property, for standard properties see MailProperties
+    from: contact@biblioap.org
     base-url: http://my-server-url-to-change # Modify according to your server's URL
   logging:
     use-json-format: false # By default, logs are not in Json format
