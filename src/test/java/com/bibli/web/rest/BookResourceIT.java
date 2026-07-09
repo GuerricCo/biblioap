@@ -946,6 +946,11 @@ class BookResourceIT {
         if (TestUtil.findAll(em, Category.class).isEmpty()) {
             bookRepository.saveAndFlush(book);
             category = CategoryResourceIT.createEntity();
+            Library categoryLibrary = LibraryResourceIT.createEntity();
+            categoryLibrary.setUser(userRepository.findAll().get(0));
+            em.persist(categoryLibrary);
+            em.flush();
+            category.setLibrary(categoryLibrary);
         } else {
             category = TestUtil.findAll(em, Category.class).get(0);
         }

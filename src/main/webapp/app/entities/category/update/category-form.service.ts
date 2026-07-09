@@ -20,6 +20,7 @@ type CategoryFormGroupContent = {
   id: FormControl<ICategory['id'] | NewCategory['id']>;
   name: FormControl<ICategory['name']>;
   description: FormControl<ICategory['description']>;
+  library: FormControl<ICategory['library']>;
 };
 
 export type CategoryFormGroup = FormGroup<CategoryFormGroupContent>;
@@ -43,6 +44,7 @@ export class CategoryFormService {
         validators: [Validators.required],
       }),
       description: new FormControl(categoryRawValue.description),
+      library: new FormControl(categoryRawValue.library),
     });
   }
 

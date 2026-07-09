@@ -35,7 +35,7 @@ public class Member implements Serializable {
     private String lastName;
 
     @NotNull
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "phone")

@@ -30,6 +30,8 @@ public class CategoryCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
+    private LongFilter libraryId;
+
     private Boolean distinct;
 
     public CategoryCriteria() {}
@@ -38,6 +40,7 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.id = other.optionalId().map(LongFilter::copy).orElse(null);
         this.name = other.optionalName().map(StringFilter::copy).orElse(null);
         this.description = other.optionalDescription().map(StringFilter::copy).orElse(null);
+        this.libraryId = other.optionalLibraryId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -103,6 +106,25 @@ public class CategoryCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
+    public LongFilter getLibraryId() {
+        return libraryId;
+    }
+
+    public Optional<LongFilter> optionalLibraryId() {
+        return Optional.ofNullable(libraryId);
+    }
+
+    public LongFilter libraryId() {
+        if (libraryId == null) {
+            setLibraryId(new LongFilter());
+        }
+        return libraryId;
+    }
+
+    public void setLibraryId(LongFilter libraryId) {
+        this.libraryId = libraryId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -135,13 +157,14 @@ public class CategoryCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(description, that.description) &&
+            Objects.equals(libraryId, that.libraryId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, distinct);
+        return Objects.hash(id, name, description, libraryId, distinct);
     }
 
     // prettier-ignore
@@ -151,6 +174,7 @@ public class CategoryCriteria implements Serializable, Criteria {
             optionalId().map(f -> "id=" + f + ", ").orElse("") +
             optionalName().map(f -> "name=" + f + ", ").orElse("") +
             optionalDescription().map(f -> "description=" + f + ", ").orElse("") +
+            optionalLibraryId().map(f -> "libraryId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

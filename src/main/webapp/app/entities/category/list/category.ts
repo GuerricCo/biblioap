@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Subscription, combineLatest, filter, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
@@ -44,6 +45,7 @@ export class Category implements OnInit {
   protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly sortService = inject(SortService);
   protected modalService = inject(NgbModal);
+  private readonly libraryContext = inject(LibraryContextService);
 
   constructor() {
     effect(() => {
@@ -99,6 +101,10 @@ export class Category implements OnInit {
     const queryObject: any = {
       sort: this.sortService.buildSortParam(this.sortState()),
     };
+    const libraryId = this.libraryContext.currentLibraryId();
+    if (libraryId) {
+      queryObject['libraryId.equals'] = libraryId;
+    }
     this.categoryService.categoriesParams.set(queryObject);
   }
 

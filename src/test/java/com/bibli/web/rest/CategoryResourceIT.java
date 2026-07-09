@@ -9,7 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bibli.IntegrationTest;
 import com.bibli.domain.Category;
+import com.bibli.domain.Library;
 import com.bibli.repository.CategoryRepository;
+import com.bibli.repository.LibraryRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.dto.CategoryDTO;
 import com.bibli.service.mapper.CategoryMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,6 +59,12 @@ class CategoryResourceIT {
     private CategoryMapper categoryMapper;
 
     @Autowired
+    private LibraryRepository libraryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -88,6 +97,10 @@ class CategoryResourceIT {
     @BeforeEach
     void initTest() {
         category = createEntity();
+        Library library = LibraryResourceIT.createEntity();
+        userRepository.findOneByLogin("user").ifPresent(library::setUser);
+        library = libraryRepository.saveAndFlush(library);
+        category.setLibrary(library);
     }
 
     @AfterEach

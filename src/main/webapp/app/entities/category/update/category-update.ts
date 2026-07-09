@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { ICategory } from '../category.model';
@@ -25,6 +26,7 @@ export class CategoryUpdate implements OnInit {
   protected categoryService = inject(CategoryService);
   protected categoryFormService = inject(CategoryFormService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly libraryContext = inject(LibraryContextService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: CategoryFormGroup = this.categoryFormService.createCategoryFormGroup();
@@ -34,6 +36,11 @@ export class CategoryUpdate implements OnInit {
       this.category = category;
       if (category) {
         this.updateForm(category);
+      } else {
+        const library = this.libraryContext.currentLibrary();
+        if (library) {
+          this.editForm.patchValue({ library });
+        }
       }
     });
   }

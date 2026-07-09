@@ -149,6 +149,7 @@
     "noavailablecopies": "No available copies left for this book.",
     "notactive": "This reservation is no longer active.",
     "alreadyreturned": "This loan has already been returned.",
+    "duplicate": "This value already exists (email, ISBN or name already used in this library).",
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""

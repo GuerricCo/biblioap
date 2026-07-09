@@ -6,6 +6,7 @@ import com.bibli.repository.CategoryRepository;
 import com.bibli.service.criteria.CategoryCriteria;
 import com.bibli.service.dto.CategoryDTO;
 import com.bibli.service.mapper.CategoryMapper;
+import jakarta.persistence.criteria.JoinType;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,8 @@ public class CategoryQueryService extends QueryService<Category> {
                 Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
                 buildRangeSpecification(criteria.getId(), Category_.id),
                 buildStringSpecification(criteria.getName(), Category_.name),
-                buildStringSpecification(criteria.getDescription(), Category_.description)
+                buildStringSpecification(criteria.getDescription(), Category_.description),
+                buildSpecification(criteria.getLibraryId(), root -> root.join(Category_.library, JoinType.LEFT).get(Library_.id))
             );
         }
         return specification;

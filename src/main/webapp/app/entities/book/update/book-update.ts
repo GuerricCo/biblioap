@@ -109,8 +109,9 @@ export class BookUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const libraryId = this.libraryContext.currentLibraryId();
     this.categoryService
-      .query()
+      .query(libraryId ? { 'libraryId.equals': libraryId } : {})
       .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
       .pipe(
         map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.book?.category)),
