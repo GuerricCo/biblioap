@@ -119,8 +119,12 @@ export class LoanUpdate implements OnInit {
       .pipe(map((books: IBook[]) => this.bookService.addBookToCollectionIfMissing<IBook>(books, this.loan?.book)))
       .subscribe((books: IBook[]) => this.booksSharedCollection.set(books));
 
+    const memberQuery: any = { 'active.equals': true };
+    if (libraryId) {
+      memberQuery['libraryId.equals'] = libraryId;
+    }
     this.memberService
-      .query(libraryId ? { 'libraryId.equals': libraryId } : {})
+      .query(memberQuery)
       .pipe(map((res: HttpResponse<IMember[]>) => res.body ?? []))
       .pipe(map((members: IMember[]) => this.memberService.addMemberToCollectionIfMissing<IMember>(members, this.loan?.member)))
       .subscribe((members: IMember[]) => this.membersSharedCollection.set(members));

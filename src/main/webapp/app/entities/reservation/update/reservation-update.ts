@@ -138,8 +138,8 @@ export class ReservationUpdate implements OnInit {
       .pipe(map((books: IBook[]) => this.bookService.addBookToCollectionIfMissing<IBook>(books, this.reservation?.book)))
       .subscribe((books: IBook[]) => this.booksSharedCollection.set(books));
 
-    // Uniquement les membres de la library courante
-    const memberQuery: any = { size: 1000 };
+    // Uniquement les membres actifs de la library courante
+    const memberQuery: any = { size: 1000, 'active.equals': true };
     if (libraryId) {
       memberQuery['libraryId.equals'] = libraryId;
     }
