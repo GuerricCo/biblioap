@@ -8,9 +8,9 @@
         "createOrEditLabel": "Créer ou éditer une bibliothèque",
         "notFound": "Aucune bibliothèque trouvée"
       },
-      "created": "Une nouvelle bibliothèque a été créée avec l'identifiant {{ param }}",
-      "updated": "La bibliothèque avec l'identifiant {{ param }} a été mise à jour",
-      "deleted": "La bibliothèque avec l'identifiant {{ param }} a été supprimée",
+      "created": "Une nouvelle bibliothèque a été créée.",
+      "updated": "La bibliothèque a été mise à jour.",
+      "deleted": "La bibliothèque a été supprimée.",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer la bibliothèque {{ id }} ?"
       },

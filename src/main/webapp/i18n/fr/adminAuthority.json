@@ -8,9 +8,9 @@
         "createOrEditLabel": "Créer ou éditer un Auteur",
         "notFound": "Aucun Auteur trouvé"
       },
-      "created": "Un nouvel Auteur a été créé avec l'identifiant {{ param }}",
-      "updated": "L'Auteur' avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "L'Auteur' avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouvel Auteur a été créé.",
+      "updated": "L'Auteur' a été mis à jour.",
+      "deleted": "L'Auteur' a été supprimé.",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer l'Auteur {{ id }} ?"
       },

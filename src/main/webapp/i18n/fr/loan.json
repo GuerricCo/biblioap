@@ -8,9 +8,9 @@
         "createOrEditLabel": "Créer ou éditer un Prêt",
         "notFound": "Aucun Prêt trouvé"
       },
-      "created": "Un nouveau Prêt a été créé avec l'identifiant {{ param }}",
-      "updated": "Le Prêt avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le Prêt avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouveau Prêt a été créé.",
+      "updated": "Le Prêt a été mis à jour.",
+      "deleted": "Le Prêt a été supprimé.",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer le Prêt {{ id }} ?"
       },

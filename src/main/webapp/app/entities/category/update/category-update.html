@@ -15,13 +15,6 @@
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <jhi-alert-error />
 
-      @if (editForm.controls.id.value !== null) {
-        <div class="form-field">
-          <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
-          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-        </div>
-      }
-
       <div class="form-section-title">Informations</div>
 
       @let nameRef = editForm.get('name')!;

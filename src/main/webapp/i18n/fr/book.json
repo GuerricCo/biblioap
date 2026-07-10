@@ -8,9 +8,9 @@
         "createOrEditLabel": "Créer ou éditer un Livre",
         "notFound": "Aucun Livre trouvé"
       },
-      "created": "Un nouveau livre a été créé avec l'identifiant {{ param }}",
-      "updated": "Le livre avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "Le livre avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouveau livre a été créé.",
+      "updated": "Le livre a été mis à jour.",
+      "deleted": "Le livre a été supprimé.",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer le Livre {{ id }} ?"
       },

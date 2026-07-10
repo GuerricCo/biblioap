@@ -8,9 +8,9 @@
         "createOrEditLabel": "Create or edit a Library",
         "notFound": "No Libraries found"
       },
-      "created": "A new Library is created with identifier {{ param }}",
-      "updated": "A Library is updated with identifier {{ param }}",
-      "deleted": "A Library is deleted with identifier {{ param }}",
+      "created": "A new Library was created.",
+      "updated": "A Library was updated.",
+      "deleted": "A Library was deleted.",
       "delete": {
         "question": "Are you sure you want to delete Library {{ id }}?"
       },

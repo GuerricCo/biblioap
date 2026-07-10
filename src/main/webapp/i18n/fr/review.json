@@ -8,9 +8,9 @@
         "createOrEditLabel": "Créer ou éditer un avis",
         "notFound": "Aucun avis trouvé"
       },
-      "created": "Un nouvel avis a été créé avec l'identifiant {{ param }}",
-      "updated": "L'avis' avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "L'avis' avec l'identifiant {{ param }} a été supprimé",
+      "created": "Un nouvel avis a été créé.",
+      "updated": "L'avis a été mis à jour.",
+      "deleted": "L'avis a été supprimé.",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer l'avis' {{ id }} ?"
       },

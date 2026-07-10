@@ -8,9 +8,9 @@
         "createOrEditLabel": "Create or edit a Reservation",
         "notFound": "No Reservations found"
       },
-      "created": "A new Reservation is created with identifier {{ param }}",
-      "updated": "A Reservation is updated with identifier {{ param }}",
-      "deleted": "A Reservation is deleted with identifier {{ param }}",
+      "created": "A new Reservation was created.",
+      "updated": "A Reservation was updated.",
+      "deleted": "A Reservation was deleted.",
       "delete": {
         "question": "Are you sure you want to delete Reservation {{ id }}?"
       },

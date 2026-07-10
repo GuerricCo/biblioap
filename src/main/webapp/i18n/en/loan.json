@@ -8,9 +8,9 @@
         "createOrEditLabel": "Create or edit a Loan",
         "notFound": "No Loans found"
       },
-      "created": "A new Loan is created with identifier {{ param }}",
-      "updated": "A Loan is updated with identifier {{ param }}",
-      "deleted": "A Loan is deleted with identifier {{ param }}",
+      "created": "A new Loan was created.",
+      "updated": "A Loan was updated.",
+      "deleted": "A Loan was deleted.",
       "delete": {
         "question": "Are you sure you want to delete Loan {{ id }}?"
       },

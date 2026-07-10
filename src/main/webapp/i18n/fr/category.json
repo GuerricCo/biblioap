@@ -8,9 +8,9 @@
         "createOrEditLabel": "Créer ou éditer une Categorie",
         "notFound": "Aucune catégorie trouvée"
       },
-      "created": "Une nouvelle Categorie a été créé avec l'identifiant {{ param }}",
-      "updated": "La Categorie avec l'identifiant {{ param }} a été mis à jour",
-      "deleted": "La Categorie avec l'identifiant {{ param }} a été supprimé",
+      "created": "Une nouvelle Categorie a été créé.",
+      "updated": "La Categorie a été mis à jour.",
+      "deleted": "La Categorie a été supprimé.",
       "delete": {
         "question": "Êtes-vous certain de vouloir supprimer la Categorie {{ id }} ?"
       },
