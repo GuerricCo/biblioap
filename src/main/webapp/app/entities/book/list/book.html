@@ -83,8 +83,7 @@
           </thead>
           <tbody>
             @for (book of books(); track trackId(book)) {
-              @let reserved = activeReservationsCount(book.id!);
-              @let available = (book.totalCopies ?? 0) - reserved;
+              @let available = book.availableCopies ?? 0;
               <tr data-cy="entityTable">
                 <td class="td-title">
                   <a [routerLink]="['/book', book.id, 'view']">{{ book.title }}</a>
@@ -111,11 +110,6 @@
                     >
                       {{ available }}/{{ book.totalCopies }}
                     </span>
-                    @if (reserved > 0) {
-                      <span class="copies-reserved" title="{{ reserved }} réservation(s) active(s)">
-                        <fa-icon icon="clock" /> {{ reserved }}
-                      </span>
-                    }
                   </div>
                 </td>
                 <td>

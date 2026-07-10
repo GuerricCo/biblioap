@@ -2,8 +2,6 @@ package com.bibli.service;
 
 import com.bibli.domain.Book;
 import com.bibli.repository.BookRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +10,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BookAvailabilityService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(BookAvailabilityService.class);
 
     private final BookRepository bookRepository;
 
@@ -41,18 +37,8 @@ public class BookAvailabilityService {
         if (book.getAvailableCopies() == null || book.getAvailableCopies() <= 0) {
             throw new BusinessException("No available copies for this book", entityName, "noavailablecopies");
         }
-        int before = book.getAvailableCopies();
-        book.setAvailableCopies(before - 1);
-        Book saved = bookRepository.save(book);
-        LOG.info(
-            "[stock] consumeCopy caller='{}' book={} {}->{}",
-            entityName,
-            bookId,
-            before,
-            saved.getAvailableCopies(),
-            new Exception("stock trace")
-        );
-        return saved;
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        return bookRepository.save(book);
     }
 
     /**
@@ -62,15 +48,6 @@ public class BookAvailabilityService {
         Book book = findBook(bookId, entityName);
         int before = book.getAvailableCopies() == null ? 0 : book.getAvailableCopies();
         book.setAvailableCopies(before + 1);
-        Book saved = bookRepository.save(book);
-        LOG.info(
-            "[stock] releaseCopy caller='{}' book={} {}->{}",
-            entityName,
-            bookId,
-            before,
-            saved.getAvailableCopies(),
-            new Exception("stock trace")
-        );
-        return saved;
+        return bookRepository.save(book);
     }
 }
