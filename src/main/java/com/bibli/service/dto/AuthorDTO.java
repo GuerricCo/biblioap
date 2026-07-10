@@ -29,6 +29,8 @@ public class AuthorDTO implements Serializable {
 
     private Set<BookDTO> bookses = new HashSet<>();
 
+    private LibraryDTO library;
+
     public Long getId() {
         return id;
     }
@@ -83,6 +85,14 @@ public class AuthorDTO implements Serializable {
 
     public void setBookses(Set<BookDTO> bookses) {
         this.bookses = bookses;
+    }
+
+    public LibraryDTO getLibrary() {
+        return library;
+    }
+
+    public void setLibrary(LibraryDTO library) {
+        this.library = library;
     }
 
     @Override

@@ -10,7 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bibli.IntegrationTest;
 import com.bibli.domain.Author;
 import com.bibli.domain.Book;
+import com.bibli.domain.Library;
 import com.bibli.repository.AuthorRepository;
+import com.bibli.repository.LibraryRepository;
+import com.bibli.repository.UserRepository;
 import com.bibli.service.dto.AuthorDTO;
 import com.bibli.service.mapper.AuthorMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -69,6 +72,12 @@ class AuthorResourceIT {
     private AuthorMapper authorMapper;
 
     @Autowired
+    private LibraryRepository libraryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -111,6 +120,10 @@ class AuthorResourceIT {
     @BeforeEach
     void initTest() {
         author = createEntity();
+        Library library = LibraryResourceIT.createEntity();
+        userRepository.findOneByLogin("user").ifPresent(library::setUser);
+        library = libraryRepository.saveAndFlush(library);
+        author.setLibrary(library);
     }
 
     @AfterEach

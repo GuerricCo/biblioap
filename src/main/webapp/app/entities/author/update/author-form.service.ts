@@ -24,6 +24,7 @@ type AuthorFormGroupContent = {
   nationality: FormControl<IAuthor['nationality']>;
   biography: FormControl<IAuthor['biography']>;
   bookses: FormControl<IAuthor['bookses']>;
+  library: FormControl<IAuthor['library']>;
 };
 
 export type AuthorFormGroup = FormGroup<AuthorFormGroupContent>;
@@ -53,6 +54,7 @@ export class AuthorFormService {
       nationality: new FormControl(authorRawValue.nationality),
       biography: new FormControl(authorRawValue.biography),
       bookses: new FormControl(authorRawValue.bookses ?? []),
+      library: new FormControl(authorRawValue.library),
     });
   }
 

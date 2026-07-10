@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { TranslateDirective } from 'app/shared/language';
 import { IAuthor } from '../author.model';
@@ -26,6 +27,7 @@ export class AuthorUpdate implements OnInit {
   protected authorService = inject(AuthorService);
   protected authorFormService = inject(AuthorFormService);
   protected activatedRoute = inject(ActivatedRoute);
+  private readonly libraryContext = inject(LibraryContextService);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: AuthorFormGroup = this.authorFormService.createAuthorFormGroup();
@@ -35,6 +37,11 @@ export class AuthorUpdate implements OnInit {
       this.author = author;
       if (author) {
         this.updateForm(author);
+      } else {
+        const library = this.libraryContext.currentLibrary();
+        if (library) {
+          this.editForm.patchValue({ library });
+        }
       }
     });
   }

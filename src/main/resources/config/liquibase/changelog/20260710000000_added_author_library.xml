@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Authors had no owning library, so they were shared across every library instead of being
+        scoped like Book/Member/Category. Add one, clearing existing test data (and the book/author
+        join table rows referencing it) so the new column can be mandatory.
+    -->
+    <changeSet id="20260710000000-1" author="jhipster">
+        <delete tableName="rel_book__authors"/>
+        <delete tableName="author"/>
+    </changeSet>
+
+    <changeSet id="20260710000000-2" author="jhipster">
+        <addColumn tableName="author">
+            <column name="library_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20260710000000-3" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="library_id"
+                                 baseTableName="author"
+                                 constraintName="fk_author__library_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="library"
+                                 />
+    </changeSet>
+</databaseChangeLog>

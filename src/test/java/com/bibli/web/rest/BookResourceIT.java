@@ -973,6 +973,11 @@ class BookResourceIT {
         if (TestUtil.findAll(em, Author.class).isEmpty()) {
             bookRepository.saveAndFlush(book);
             authors = AuthorResourceIT.createEntity();
+            Library authorLibrary = LibraryResourceIT.createEntity();
+            authorLibrary.setUser(userRepository.findAll().get(0));
+            em.persist(authorLibrary);
+            em.flush();
+            authors.setLibrary(authorLibrary);
         } else {
             authors = TestUtil.findAll(em, Author.class).get(0);
         }

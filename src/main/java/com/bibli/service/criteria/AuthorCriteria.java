@@ -38,6 +38,8 @@ public class AuthorCriteria implements Serializable, Criteria {
 
     private LongFilter booksId;
 
+    private LongFilter libraryId;
+
     private Boolean distinct;
 
     public AuthorCriteria() {}
@@ -50,6 +52,7 @@ public class AuthorCriteria implements Serializable, Criteria {
         this.nationality = other.optionalNationality().map(StringFilter::copy).orElse(null);
         this.biography = other.optionalBiography().map(StringFilter::copy).orElse(null);
         this.booksId = other.optionalBooksId().map(LongFilter::copy).orElse(null);
+        this.libraryId = other.optionalLibraryId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -191,6 +194,25 @@ public class AuthorCriteria implements Serializable, Criteria {
         this.booksId = booksId;
     }
 
+    public LongFilter getLibraryId() {
+        return libraryId;
+    }
+
+    public Optional<LongFilter> optionalLibraryId() {
+        return Optional.ofNullable(libraryId);
+    }
+
+    public LongFilter libraryId() {
+        if (libraryId == null) {
+            setLibraryId(new LongFilter());
+        }
+        return libraryId;
+    }
+
+    public void setLibraryId(LongFilter libraryId) {
+        this.libraryId = libraryId;
+    }
+
     public Boolean getDistinct() {
         return distinct;
     }
@@ -227,13 +249,14 @@ public class AuthorCriteria implements Serializable, Criteria {
             Objects.equals(nationality, that.nationality) &&
             Objects.equals(biography, that.biography) &&
             Objects.equals(booksId, that.booksId) &&
+            Objects.equals(libraryId, that.libraryId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, birthDate, nationality, biography, booksId, distinct);
+        return Objects.hash(id, firstName, lastName, birthDate, nationality, biography, booksId, libraryId, distinct);
     }
 
     // prettier-ignore
@@ -247,6 +270,7 @@ public class AuthorCriteria implements Serializable, Criteria {
             optionalNationality().map(f -> "nationality=" + f + ", ").orElse("") +
             optionalBiography().map(f -> "biography=" + f + ", ").orElse("") +
             optionalBooksId().map(f -> "booksId=" + f + ", ").orElse("") +
+            optionalLibraryId().map(f -> "libraryId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

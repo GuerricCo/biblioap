@@ -79,7 +79,8 @@ public class AuthorQueryService extends QueryService<Author> {
                 buildRangeSpecification(criteria.getBirthDate(), Author_.birthDate),
                 buildStringSpecification(criteria.getNationality(), Author_.nationality),
                 buildStringSpecification(criteria.getBiography(), Author_.biography),
-                buildSpecification(criteria.getBooksId(), root -> root.join(Author_.bookses, JoinType.LEFT).get(Book_.id))
+                buildSpecification(criteria.getBooksId(), root -> root.join(Author_.bookses, JoinType.LEFT).get(Book_.id)),
+                buildSpecification(criteria.getLibraryId(), root -> root.join(Author_.library, JoinType.LEFT).get(Library_.id))
             );
         }
         return specification;

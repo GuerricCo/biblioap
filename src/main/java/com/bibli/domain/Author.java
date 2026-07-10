@@ -51,6 +51,10 @@ public class Author implements Serializable {
     @JsonIgnoreProperties(value = { "library", "category", "authorses" }, allowSetters = true)
     private Set<Book> bookses = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @NotNull
+    private Library library;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -159,6 +163,19 @@ public class Author implements Serializable {
     public Author removeBooks(Book book) {
         this.bookses.remove(book);
         book.getAuthorses().remove(this);
+        return this;
+    }
+
+    public Library getLibrary() {
+        return this.library;
+    }
+
+    public void setLibrary(Library library) {
+        this.library = library;
+    }
+
+    public Author library(Library library) {
+        this.setLibrary(library);
         return this;
     }
 

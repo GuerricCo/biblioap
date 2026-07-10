@@ -2,8 +2,10 @@ package com.bibli.service.mapper;
 
 import com.bibli.domain.Author;
 import com.bibli.domain.Book;
+import com.bibli.domain.Library;
 import com.bibli.service.dto.AuthorDTO;
 import com.bibli.service.dto.BookDTO;
+import com.bibli.service.dto.LibraryDTO;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
@@ -14,6 +16,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface AuthorMapper extends EntityMapper<AuthorDTO, Author> {
     @Mapping(target = "bookses", source = "bookses", qualifiedByName = "bookTitleSet")
+    @Mapping(target = "library", source = "library", qualifiedByName = "libraryName")
     AuthorDTO toDto(Author s);
 
     @Mapping(target = "bookses", ignore = true)
@@ -30,4 +33,10 @@ public interface AuthorMapper extends EntityMapper<AuthorDTO, Author> {
     default Set<BookDTO> toDtoBookTitleSet(Set<Book> book) {
         return book.stream().map(this::toDtoBookTitle).collect(Collectors.toSet());
     }
+
+    @Named("libraryName")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    LibraryDTO toDtoLibraryName(Library library);
 }

@@ -12,6 +12,7 @@ import { Subscription, combineLatest, filter, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
+import { LibraryContextService } from 'app/core/library-context/library-context.service';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { FormatMediumDatePipe } from 'app/shared/date';
@@ -61,6 +62,7 @@ export class Author implements OnInit {
   protected readonly sortService = inject(SortService);
   protected readonly filterOptions = toSignal(this.filters.filterChanges);
   protected modalService = inject(NgbModal);
+  private readonly libraryContext = inject(LibraryContextService);
 
   constructor() {
     effect(() => {
@@ -143,6 +145,10 @@ export class Author implements OnInit {
     };
     for (const filterOption of this.filters.filterOptions) {
       queryObject[filterOption.name] = filterOption.values;
+    }
+    const libraryId = this.libraryContext.currentLibraryId();
+    if (libraryId) {
+      queryObject['libraryId.equals'] = libraryId;
     }
     this.authorService.authorsParams.set(queryObject);
   }

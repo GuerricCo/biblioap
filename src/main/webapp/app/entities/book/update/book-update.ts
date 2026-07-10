@@ -119,7 +119,7 @@ export class BookUpdate implements OnInit {
       .subscribe((categories: ICategory[]) => this.categoriesSharedCollection.set(categories));
 
     this.authorService
-      .query()
+      .query(libraryId ? { 'libraryId.equals': libraryId } : {})
       .pipe(map((res: HttpResponse<IAuthor[]>) => res.body ?? []))
       .pipe(
         map((authors: IAuthor[]) => this.authorService.addAuthorToCollectionIfMissing<IAuthor>(authors, ...(this.book?.authorses ?? []))),
